@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" name ="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>path mapping</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<!-- ServiceWorker -->
+<script>
+if ("serviceWorker" in navigator) {
+	window.addEventListener("load", function () {
+		navigator.serviceWorker.register("./sw.js").then(
+			function (registration) {
+				console.log(
+					"ServiceWorker registration successful with scope: ",
+					registration.scope
+				);
+			},
+			function (err) {
+				console.log("ServiceWorker registration failed: ", err);
+			}
+		);
+	});
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" rel="stylesheet">
+<script type="text/javascript">
+(function(){var proto_initIcon=L.Marker.prototype._initIcon;var proto_setPos=L.Marker.prototype._setPos;var oldIE=(L.DomUtil.TRANSFORM==='msTransform');L.Marker.addInitHook(function(){var iconOptions=this.options.icon&&this.options.icon.options;var iconAnchor=iconOptions&&this.options.icon.options.iconAnchor;if(iconAnchor){iconAnchor=(iconAnchor[0]+'px '+iconAnchor[1]+'px')} this.options.rotationOrigin=this.options.rotationOrigin||iconAnchor||'center bottom';this.options.rotationAngle=this.options.rotationAngle||0;this.on('drag',function(e){e.target._applyRotation()})});L.Marker.include({_initIcon:function(){proto_initIcon.call(this)},_setPos:function(pos){proto_setPos.call(this,pos);this._applyRotation()},_applyRotation:function(){if(this.options.rotationAngle){this._icon.style[L.DomUtil.TRANSFORM+'Origin']=this.options.rotationOrigin;if(oldIE){this._icon.style[L.DomUtil.TRANSFORM]='rotate('+this.options.rotationAngle+'deg)'}else{this._icon.style[L.DomUtil.TRANSFORM]+=' rotateZ('+this.options.rotationAngle+'deg)'}}},setRotationAngle:function(angle){this.options.rotationAngle=angle;this.update();return this},setRotationOrigin:function(origin){this.options.rotationOrigin=origin;this.update();return this}})})()
+</script>
+<script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js"></script>
+<style>
+.blinking{
+    -webkit-animation:blink 2s ease-in-out infinite alternate;
+    -moz-animation:blink 2s ease-in-out infinite alternate;
+    animation:blink 2s ease-in-out infinite alternate;
+}
+@-webkit-keyframes blink{
+    50% {opacity:0.5;}
+    100% {opacity:1;}
+}
+@-moz-keyframes blink{
+    50% {opacity:0.5;}
+    100% {opacity:1;}
+}
+@keyframes blink{
+    50% {opacity:0.5;}
+    100% {opacity:1;}
+}
+.solid_icon2{
+	position:absolute;
+}
+.solid_icon2:before{
+	content:'';
+	position:absolute;
+	width:44px;
+	height:44px;
+	left:-9px;
+	top:-9px;
+	border:solid 10px;
+	background:#00000000;
+	border-radius:32px 32px 32px 0;
+	-webkit-transform:rotate(-45deg);
+	-ms-transform:rotate(-45deg);
+	transform:rotate(-45deg);
+	box-sizing:content-box;
+}
+.solid_icon2:after{
+	content:'';
+	position:absolute;
+	width:44px;
+	height:44px;
+	left:-9px;
+	top:-9px;
+	border:solid 10px;
+	background:#00000000;
+	border-radius:32px 32px 32px 32px;
+	-webkit-transform:rotate(0deg);
+	-ms-transform:rotate(0deg);
+	transform:rotate(0deg);
+	box-sizing:content-box;
+}
+.color_palette2{
+	background-color:#ff69b4;
+	color:#6495ed;
+	border-color:#6495ed;
+}
+.trian{
+	width:0;
+	height:0;
+	border-style:solid;
+	left:-45px;
+	top:-45px;
+	border-width: 50px 50px 0 50px;
+	border-color: #1976D230 transparent transparent transparent;
+}
+</style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body onload="init()" style="overflow-x: hidden;">
+<div class="btn-group col-12" role="group" aria-label="Basic radio toggle button group">
+	<input type="radio" class="btn-check" name="btnradio" id="start" autocomplete="off">
+	<label class="btn btn-outline-primary col-4" for="start">TRACK(gps)</label>
+	<input type="radio" class="btn-check" name="btnradio" id="starteco" autocomplete="off">
+	<label class="btn btn-outline-primary col-4" for="starteco">TRACK(eco)</label>
+	<input type="radio" class="btn-check" name="btnradio" id="stop" autocomplete="off" checked>
+	<label class="btn btn-outline-danger col-4" for="stop">STOP</label>
+</div>
+<div id="map" style="width: auto; height: 60vh; border: solid 0px;box-sizing:border-box"></div>
+<div class="btn-group col-12" role="group">
+<button type="button" class="btn btn-outline-primary"  style="width: 20%;box-sizing:border-box" id ="hiraku">開く</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 20%;box-sizing:border-box" id ="hozon">保存</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 20%;box-sizing:border-box" id ="mieru">表示</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 20%;box-sizing:border-box" id ="kesu">非表示</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 20%;box-sizing:border-box" id ="genzai">現在地</button>
+</div>
+<div class="row">
+	<div   style="width: 20%;box-sizing:border-box">
+		<button type="button" id="camera">
+		<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABI9JREFUeF7tWmtS2zAQ9jrco3AS4B8Tcweak0BOUnMHnOFfzUnq3gNb7Xokj6JorZW8atwhmWHITPRYffvtU4Lii3/gi5+/uABwYcAXRyC7CWy32++pGJdl2X1+fnbv7+9d6hqheVkA2G63zwCAB78OCcD8vVVKvQ7D0EqDIQrA4+PjnVLquSiKO+bBYoe1fd/vJEEQA+Dh4eF6s9n8ij1Ryvi+72+kQBADoKqqnxk17+LU9X1/LwGCCADa5l8IbdZKqY8UTQPArQb1xJcopV4Oh8M+ZV17jggAVVUh9V0h66ZpdksFxPkEwG3TNPdL118MAGH7XdM0N0uFs+f7QJbwBYsBwDgPAD9sYaXoaa/pY4FSanc4HOolQM8CgNoNLb7ZbDDsHSU7AHD/9vbWhubG/K5DLDra6YMAYG7AWYdymEcA6E2eKMfD2QjHSFDT3csHAFcea9yYUNmsmQCQDGNN0yw2Ld/hqqpSCYf2Tan7vt8jK0ZBA2Esds+gA0RtDsMwmZfJ+XGjudhORJtY+cbxxk+BELVsIU7Ck3aUGNO5hVELAHu3EJJkKQqMvgpmtJ/kXTHpQRvT4fHEQSaoa6KrBWTsMsg282fPrcGH6lIbFjYpQ9nR46emv1ohGEXsyNYiAK5jSc6wtDlhThAMn7Eq1ONH00gNsT5liwGQwZeQGKUmQNkA8GWDDA1jl8d0egxj2MxJyTZFADDZ4dXV1bUOZd8AgKoEj6JDqKujw+NtRDepBoBX3AQjhtmM8hNcAHAhk17anpOtHVf7KZTVrMIokrqvAcT+j52qo/V8PoDBXt6QFJq6K1dVhU71RHCeBOFR2QCQLIgyNFknZLIAIHl4I2kuEMQB4Nq7cXhFUfzGWoAT23MkWNIAsJIoqouE2g41O7VP4NYUQScgCkBMH2CmsOmUUjXV8JROuCQBYGnfqIRxELKpKskCMQBitI8gMC5SOgDY+XwDA7wg9c0AKQCCTRCfRIz6nlxXqjkiBUAU/SPMYGxa+FjAAI/FAhEAqIwPwxZKUZblh+8QDDOYWldEhrg4GmQFwKHp6N1dMBia9LIrsQI9YYUIADM09V2ZoRAjGPiFUfl5/YCUIxQBgMr+GNrl2Kk3HK6KAXM+gNkrmOv+eG+BpdJiEQb8rbG9WpKgKcWutQHgvQ7TXt7U8xy6u2PI8Cp1SyTFADJec0IdhQzlXJes6e4lBsBc9yfFYc31FKToP0YhKSrpUpZ8vERcTPiUT9YAzBoiytREAcBm6tyzFQShLMsnAMAen/uUbrYMNqcSCq35WmLcRqjdXud0g1BiSepLV4NHtOOCEMNViZDq20/aBKY9JEHIofmsDDCLIwjDMLym3ujiOtI2ny0MztHZPGaKASIldMaYlM0AqmJLWS80Z3r5gQNtQHSEuNOvQxfX+SFB9O8d+gBMVf/Vhq5c7u0wU26xYTU+kTl56Ci2/MoXGt8I5YqvKz87ijdWsFneCf4Hh58y1qMHjbkuINcEiNtf8L7oRI9svQBZk/zJslAvzLI8aU2W8gwTLwCcAfRVbXlhwKrUcQZh/gBJDxU29MAgwgAAAABJRU5ErkJggg=="/>
+		</button>
+		<input type="file" id="photo" accept="image/*" capture="environment" class="form-control" style="display: none;" onChange="upload()">
+	</div>
+	<div   style="width: 80%;box-sizing:border-box;padding-top:5px;">
+		<div style="height: 50%;">
+			<input type="datetime-local" id="kara" >から
+		</div>
+		<div style="height: 50%;">
+			<input type="datetime-local" id="made" value="9999-12-31T23:59:59">まで
+		</div>
+	</div>
+</div>
+<table border="0" class="table table-sm col-12" style="line-height: 150%;">
+<tr><td class="w-30">時刻</td><td class="w-70"><span id="postime"></span></td></tr>
+<tr><td class="w-30">精度</td><td class="w-70"><span id="posaccu"></span></td></tr>
+<tr><td class="w-30">方位</td><td class="w-70"><span id="posdire"></span></td></tr>
+<tr><td class="w-30">速度</td><td class="w-70"><span id="posspee"></span></td></tr>
+<tr><td class="w-30">移動距離</td><td class="w-70"><span id="idokyori"></span></td></tr>
+</table>
+<div class="btn-group col-12" role="group" aria-label="Basic checkbox toggle button group">
+	<input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+	<label class="btn btn-outline-danger col-12  btn-sm" for="btncheck1">screen off</label>
+</div>
+<script type="text/javascript">
+var map;
+var postime = document.getElementById("postime");
+var posaccu = document.getElementById("posaccu");
+var posdire = document.getElementById("posdire");
+var posspee = document.getElementById("posspee");
+var idokyori = document.getElementById("idokyori");
+document.getElementById("start").addEventListener("click", startgeposi);
+document.getElementById("starteco").addEventListener("click", startgeposieco);
+document.getElementById("stop").addEventListener("click", stopgeposi);
+var pline,geooption,plines,plinesmoto,pstat
+var latlon=[35,135]
+var Iconstart,Iconstop,track,trackrotate,IntervalId,watchID,kyoriruikei=0,maenotime,width,height,platlon;
+var photomarker,photohead,pphotohead,hphotomarker,camhoko;
+document.getElementById('hozon').addEventListener('click', betumeihozon);
+document.getElementById('hiraku').addEventListener('click', yomikomi);
+document.getElementById('kesu').addEventListener('click', hihyoji);
+document.getElementById('mieru').addEventListener('click', kikan);	
+document.getElementById('genzai').addEventListener('click', genzai);	
+document.getElementById('camera').addEventListener("click", () => {
+	document.querySelector("input[id='photo']").click();
+});
+var kara = document.getElementById("kara");
+var made = document.getElementById("made");
+kara.addEventListener('change', kikan);
+made.addEventListener('change', kikan);
+
+function init() {
+	screen.orientation.lock('portrait')
+	var noSleep = new NoSleep();
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(
+			function (pos) { 
+				latlon = [pos.coords.latitude,pos.coords.longitude]
+				postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
+				posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
+				map.setView(latlon)
+				track.setLatLng(latlon)
+				camhoko.setLatLng(latlon);
+				maenotime = pos.timestamp
+			},
+			function (error) {
+				postime.innerText = new Date().toLocaleString("ja-JP")
+				posaccu.innerText = "エラー"+error.code
+			},{
+				"enableHighAccuracy": true,
+				"timeout": 5000,
+				"maximumAge": 0,
+			}
+		);
+	}else{
+		alert("位置情報機能なし")
+	}
+	map = L.map('map',{center:latlon,zoom:15,zoomControl:false});
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy;OpenStreetMap contributors',
+		maxZoom: 22,
+		maxNativeZoom: 19,
+	}).addTo(map);
+	map.attributionControl.setPosition('bottomright').setPrefix(false);
+
+	iconurl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABMlJREFUeF7tWdtNG0EUteEPkAIVxFQAVID54yUFKghUAFQQUwGmgtgVxEi8/lgqwFQAqSDmA74A55zVXOt6Ge/uOB6TlWellcF79z7Ofc51uTThV3nC7S8FAEIETDgCIQUmPABCEQwpEFJgwhEIKTDhARC6QEiBkAITjoBTCmxsbKz6xKtcLj9dXl62fcpI8s4EYHt7u/r+/n4A5XbGoVi3232EnMbLy8tpFEUd3zIHAlCtVudnZmZOYPiebyVs/AkE7qOrq6uWT/kDAdjc3LyD8csW4fdQTDyzDJovoNHfpeoL+nkQLIHHEz51uAuvvvdBt4+0aPgCwQoAjP+Z8Pw90qCW9AboItCt4l47Pz+P8ijJlIJRN7hvYVhVv7O+vl6ZmpraA78f+nvQrviqDR8AEAWVAs2LiwtrGowaAJEJvow8gsvo4tV5fn5e9FETPgAA4Q8QXDGC72G8LQ3ix74AIO+kIxAFbUTBSp4oc6HpAwAG1XT4ZeWfTwBoxNbW1iE+TsQg6NMACPsuBmbR9gBg1Z+dnX3ACyxSJRYpCIv/HnT5BsCA0MDndwXCSItiDwCL908BAD3wqQAYx0RQYskHCBoAnfult7e3xevr68fPBoDyTXdoq6LIr+uI0ua/docYAFZdML/TxqL4ZU6J40gB0cnSnbS6jJC2GZ7aaNe3aY7TzwSAvuJnCCIwJOO0iz27wuIEotRoUUwqnDFk5M2rKOjopNzjOLsGQTE3Zw7rGUMAiAcaB2X+d1KZTPV0GWGW2E3OEjEAaDd/8JFa8V0tNqNuXb1HZb658hmGHoYuiKGmftQpm1GBQ9aaBkEA6A4jKO0dCOvrIqaaE2jvl200R71qGRD69PIGgHcrUwSwJpm61KPiwQ53HJG6wzkBkDjBWU9v4zIcuvyWwjtE/eqdb3IBQGG4D5OnQbMsYQcZZwFtwoM1PaOY9GJnoS5ygEr1hURBHgCaKCqHc3Nzy3ozxILCkMK80ER+scgc+PY+zyYoYi0saigrbsH47OD7FnQ7pvzp6WkuUHpTY4pOR9C9ngVAfBpMjsmaqRxQpMh4BOEIjmjA+JsBi5oOQNinY7BTSE6NH9SSfUQMAEPZpvjr6+sjhYHhr4yKfwzhDaDPw9TIL6YgBpmKTJ4pAjoI7RXoO887TRHo2+FwVDZHTmt/hvfX8JwTVBxSUgtgKMOOFVVCrQPahRwKDgUOZDG82cb0uN7E/6z2yzr3pf0aXbLa+xkBGEjE84B+DtR2pRAm+zp7L55Xk+usoSxOvGTh3beo0TVIQjvNLs3eCQAw79vNaSFUkowJwiiM1jyYXnpXKEYKjV6cOAOQVrwYAXjOOvDVpEBvI5Os/Hr8HDUA5IcfZXZ0LZJoNOt7XRjjHp8nAgDWWZ4jr+2kyLW4LjIDF6ejBEM7w/BN6lGyjcFpOmQCYNvIaIacDtGbKz42tknFM3YCJHd2RCYA5GpAYNXv7eZMStzC+J1xGC9gmJU5O0KclkYP/shSR1uruUZcLgCEKYHgRMj/OSNkrcxclXGhJxDS6/P+KGPj7wSAi4JFoQ0AFMVTvvQMEeAL2aLwDRFQFE/50jNEgC9ki8I3REBRPOVLzxABvpAtCt8QAUXxlC89QwT4QrYofP8Ck3EhDeomx8cAAAAASUVORK5CYII="
+	Iconstart = L.icon({
+		iconUrl: iconurl,
+		iconAnchor: [24, 36],
+		iconSize: [48, 48],
+		className:'blinking',
+	});
+
+	Iconstop = L.icon({
+		iconUrl: iconurl,
+		iconAnchor: [24, 36],
+		iconSize: [48, 48],
+	});
+
+	track = L.marker(latlon, {
+		icon: Iconstop,
+		rotationAngle: 0,
+		rotationOrigin:'bottom center',
+	}).addTo(map);
+
+	plines = L.featureGroup().addTo(map);
+	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
+	plinesmoto = {"type":"FeatureCollection","features":[]}
+
+	photomarker = {"type":"FeatureCollection","features":[]}
+	hphotomarker = L.markerClusterGroup({
+		spiderfyOnMaxZoom: true,
+		showCoverageOnHover: false,
+		removeOutsideVisibleBounds: true,
+		zoomToBoundsOnClick: true
+	}).addTo(map);
+	
+	nowdate = new Date()
+	kara.value = new Date(nowdate- nowdate.getTimezoneOffset() * 60000-86400000).toISOString().slice(0, -5)
+	
+	triicon = L.divIcon({
+	className:'trian',
+	iconSize: [0, 0]
+	});	
+	camhoko = L.marker(latlon, {
+		icon: triicon,
+		rotationAngle: 0,
+		rotationOrigin:'bottom center',
+		opacity : 0
+	}).addTo(map)
+	window.addEventListener("DOMContentLoaded", init);
+}
+
+function orientation(event) {
+	let absolute = event.absolute;
+	let alpha = event.alpha;
+	let beta = event.beta;
+	let gamma = event.gamma;
+	photohead = compassHeading(alpha, beta, gamma);
+	if(photohead){
+		camhoko.setOpacity(1)
+		camhoko.setRotationAngle(photohead)
+	} else {
+		camhoko.setOpacity(0)
+	}	
+	function compassHeading(alpha, beta, gamma) {
+		var degtorad = Math.PI / 180; 
+		var _x = beta ? beta * degtorad : 0; 
+		var _y = gamma ? gamma * degtorad : 0; 
+		var _z = alpha ? alpha * degtorad : 0; 
+		var cX = Math.cos(_x);
+		var cY = Math.cos(_y);
+		var cZ = Math.cos(_z);
+		var sX = Math.sin(_x);
+		var sY = Math.sin(_y);
+		var sZ = Math.sin(_z);
+		var Vx = -cZ * sY - sZ * sX * cY;
+		var Vy = -sZ * sY + cZ * sX * cY;
+		var compassHeading = Math.atan(Vx / Vy);
+		if (Vy < 0) {
+			compassHeading += Math.PI;
+		} else if (Vx < 0) {
+			compassHeading += 2 * Math.PI;
+		}
+		return compassHeading * (180 / Math.PI);
+	}
+}
+	
+function startgeposi() {
+	window.addEventListener("deviceorientationabsolute",orientation,true);
+	pstat=Date().toLocaleString("ja-JP")
+	track.setIcon(Iconstart)
+	navigator.geolocation.clearWatch(watchID);
+	clearInterval(IntervalId);
+	IntervalId = null;
+	geooption = {
+		"enableHighAccuracy": true,
+		"timeout": 5000,
+		"maximumAge": 0,
+	}
+	watchposition()
+}
+
+function startgeposieco() {
+	window.removeEventListener("deviceorientationabsolute",orientation,true);
+	camhoko.setOpacity(0)
+	pstat=new Date().toLocaleString("ja-JP")
+	track.setIcon(Iconstart)
+	clearInterval(IntervalId);
+	IntervalId = null;
+	navigator.geolocation.clearWatch(watchID);
+	geooption = {
+		"enableHighAccuracy": false,
+		"timeout": Infinity,
+		"maximumAge": 0,
+	}
+	getposition()
+	IntervalId = setInterval(getposition, 30000);
+}
+
+function stopgeposi()  {
+	window.removeEventListener("deviceorientationabsolute",orientation,true);
+	camhoko.setOpacity(0)
+	clearInterval(IntervalId);
+	IntervalId = null;
+	navigator.geolocation.clearWatch(watchID);
+	track.setIcon(Iconstop)
+	if(pline.isEmpty())return
+	tmppline = pline.toGeoJSON()
+	tmppline.properties={
+		"shurui":"path",
+		"start":new Date(pstat).toLocaleString("ja-JP"),
+		"end":new Date().toLocaleString("ja-JP")
+	}
+	filterpath(tmppline)
+	plinesmoto.features.push(tmppline);
+	pline.remove()
+	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
+}
+
+
+function getposition(){
+	navigator.geolocation.getCurrentPosition(
+		function (pos) {
+			if(latlon==[35,135]){setTimeout(() => 
+				{
+					ref(pos,30)
+				}, "5000")
+			}else{
+				ref(pos,30);
+			}
+		},
+		function (error) {
+			postime.innerText = new Date().toLocaleString("ja-JP")
+			posaccu.innerText = "エラー"+error.code
+		},geooption
+	);
+}
+
+function ref(pos,LIMIT){
+	posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
+	postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
+	kyori = L.latLng(latlon).distanceTo(L.latLng([pos.coords.latitude,pos.coords.longitude]))
+	if(pos.coords.speed){
+		posspee.innerText = Math.round(pos.coords.speed*36/10)+"km/h"
+	}else{
+		posspee.innerText = Math.round(kyori / (pos.timestamp - maenotime) * 3600)+"km/h"
+	}
+	if (kyori > LIMIT && kyori > pos.coords.accuracy){
+		oldlatlon = latlon
+		latlon = [pos.coords.latitude,pos.coords.longitude]
+		kyoriruikei = kyoriruikei + kyori;
+		idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
+		map.setView(latlon);
+		tmpbear = bearing(oldlatlon, latlon)
+		if(pos.coords.heading){
+			var dindex = Math.round( pos.coords.heading / 22.5 )
+		}else{
+			var dindex = Math.round( tmpbear / 22.5 )
+		}
+		var dname = ["北","北北東","北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西", "北"];
+		posdire.innerText = dname[dindex]
+		track.setRotationAngle(tmpbear-90)
+		track.setLatLng(latlon)
+		pline.addLatLng(latlon);
+		camhoko.setLatLng(latlon);
+		maenotime = pos.timestamp
+	}else{
+		idokyori.innerText = Math.round(kyoriruikei)+"m（"+Math.round(kyori)+"m）"
+	}
+}
+	
+function watchposition(){
+	watchID = navigator.geolocation.watchPosition(
+		function (pos) { 
+			if(latlon==[35,135]){setTimeout(() => {
+					ref(pos,10)
+				}, "5000")
+			}else{
+				ref(pos,10);
+			};
+		},
+		function (error) {
+			postime.innerText = new Date().toLocaleString("ja-JP")
+			posaccu.innerText = "エラー"+error.code
+		},geooption
+	);
+}
+
+function genzai(){
+	navigator.geolocation.getCurrentPosition(
+		function (pos) { 
+			latlon = [pos.coords.latitude,pos.coords.longitude]
+			postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
+			posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
+			if(!pline.isEmpty()){
+				map.setView(latlon)
+				track.setLatLng(latlon)
+				camhoko.setLatLng(latlon);
+			}else{
+				ref(pos,10)
+			}
+		},
+		function (error) {
+			postime.innerText = new Date().toLocaleString("ja-JP")
+			posaccu.innerText = "エラー"+error.code
+		},{
+			"enableHighAccuracy": true,
+			"timeout": Infinity,
+			"maximumAge": 0,
+		}
+	)
+}
+		
+function bearing(latlon1,latlon2){
+	const lat1Rad = oldlatlon[0]* (Math.PI / 180);
+	const lon1Rad = oldlatlon[1] * (Math.PI / 180);
+	const lat2Rad = latlon[0] * (Math.PI / 180);
+	const lon2Rad = latlon[1] * (Math.PI / 180);
+	const y = Math.sin(lon2Rad - lon1Rad) * Math.cos(lat2Rad);
+	const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(lon2Rad - lon1Rad);
+	let bearing = Math.atan2(y, x);
+	bearing = bearing * (180 / Math.PI);
+	bearing = (bearing + 360) % 360;
+	return bearing
+}
+function hihyoji(){
+	hphotomarker.clearLayers();
+	plines.clearLayers();
+}
+
+function kikan(){
+	hphotomarker.clearLayers();
+	filtermap(photomarker);
+	plines.clearLayers();
+	filterpath(plinesmoto)
+}
+
+function filtermap(TMP){
+	tmpfilter = L.geoJSON(TMP, {
+		filter: function(feature) {
+			datekata = new Date(feature.properties.date);
+			datekata = new Date(datekata- datekata.getTimezoneOffset() * 60000).toISOString().slice(0, -5);
+			return  datekata >= kara.value && datekata <= made.value;
+		}
+	})
+	tmpfilter = tmpfilter.toGeoJSON()
+	mapping(tmpfilter)
+}
+
+function filterpath(TMP2){
+	tmpfilter2 = L.geoJSON(TMP2, {
+		filter: function(feature) {
+			datekata1 = new Date(feature.properties.start);
+			datekata1 = new Date(datekata1- datekata1.getTimezoneOffset() * 60000).toISOString().slice(0, -5);
+			datekata2 = new Date(feature.properties.end);
+			datekata2 = new Date(datekata2- datekata2.getTimezoneOffset() * 60000).toISOString().slice(0, -5);
+			return  datekata2 >= kara.value && datekata1 <= made.value;
+		}
+	})
+	tmpfilter2 = tmpfilter2.toGeoJSON();
+	plines.addLayer(L.geoJSON(tmpfilter2,{
+		color: 'blue',
+		weight: 10,
+		opacity:0.2,
+		onEachFeature: function(feature, layer){
+			layer.on("contextmenu",function(e){
+				if (window.confirm("削除しますか?")) {
+					map.removeLayer(layer)
+					tmpdate = layer.toGeoJSON().properties.start
+					findIndex = plinesmoto.features.findIndex((item) => item.properties.start === tmpdate && item.properties.shurui === "path");
+					plinesmoto.features.splice(findIndex, 1);
+				}
+			})
+		}
+	}));
+}
+
+function mapping(TMP){
+	fileopen = L.geoJSON(TMP,{
+		pointToLayer: function(feature, latlng) {
+			let baloonicon = L.divIcon({
+				html:"<img src="+feature.properties.thum+">",
+				className:'solid_icon2 color_palette2',
+				iconSize: [0, 0],
+				iconAnchor: [22, 64]
+			});
+			
+			return L.marker(latlng, {
+				icon:baloonicon,
+				rotationAngle:feature.properties.rotation,
+			})
+		},
+		onEachFeature: function(feature, layer){
+			let imageurl = feature.properties.img;
+			let comment1 = feature.properties.date+"<BR><img src="+imageurl+" width= "+ feature.properties.width +"height= "+feature.properties.height+" id='gazou'>";
+			popcon = L.popup(L.GeoJSON.coordsToLatLng(feature.geometry.coordinates),
+				{content:comment1,
+				offset:L.point(0, -16),
+				maxWidth:400,
+				autoPan:false,
+				keepInView:true
+			})
+			layer.bindPopup(popcon).on("popupopen",function(e){
+				let gazou = document.getElementById("gazou");
+				gazou.addEventListener('click', gazouclick)
+				function gazouclick(){layer.closePopup()}
+			})
+			layer.on("contextmenu",function(e){
+				if (window.confirm("削除しますか?")) {
+					hphotomarker.removeLayer(layer)
+					tmpdate = layer.toGeoJSON().properties.date
+					findIndex = photomarker.features.findIndex((item) => item.properties.date === tmpdate && item.properties.shurui === "photo");
+					photomarker.features.splice(findIndex, 1);
+				}
+			})
+		}
+	})
+	hphotomarker.addLayer(fileopen);
+	fileopen=fileopen.toGeoJSON()
+}
+
+function upload(){
+	window.addEventListener("deviceorientationabsolute",tmpfunc,true);
+	function tmpfunc(event){
+		orientation(event)
+		window.removeEventListener("deviceorientationabsolute",tmpfunc,true);
+		pphotohead = photohead
+		camhoko.setOpacity(0)
+	}
+	navigator.geolocation.getCurrentPosition(
+		function (pos) { 
+			platlon = [pos.coords.latitude,pos.coords.longitude]
+		},
+		function (error) {
+			platlon = latlon
+		},{
+			"enableHighAccuracy": true,
+			"timeout": 3000,
+			"maximumAge": 0,
+		}
+	);
+	var imagefile2 = document.getElementById("photo").files[0];
+	blobUrl = window.URL.createObjectURL(imagefile2);
+	const img1 = new Image();
+	img1.src = blobUrl;
+	img1.onload = () => {
+		const cvs1 = document.createElement('canvas');
+		const ctx1 = cvs1.getContext('2d');
+		cvs1.width = img1.width;
+		cvs1.height = img1.height;
+		ctx1.drawImage(img1, 0, 0);
+		date = new Date().toLocaleString('ja-JP')
+		imageurlthum = resize(46,46,true)
+		imageurl = resize(400,400,false)
+		photoimage()
+		function resize(maxWidth,maxHeight,trim){
+			if(img1.width > img1.height){
+				const ratio = img1.height/img1.width;
+				width = maxWidth;
+				sy = 0;
+				sheight = img1.height;
+				if(!trim){
+					height = maxWidth * ratio;
+					sx = 0
+					swidth =  img1.width
+				}else{
+					height = maxWidth;
+					sx = (img1.width-img1.height)/2
+					swidth = img1.height
+				}
+			} else {
+				const ratio = img1.width/img1.height;
+				sx = 0
+				height = maxHeight;
+				swidth = img1.width
+				if(!trim){
+					width = maxHeight * ratio;
+					sy = 0
+					sheight= img1.height
+				}else{
+					width = maxHeight;
+					sy = (img1.height-img1.width)/2
+					sheight= img1.width
+				}
+			};
+			
+			const cvs2 = document.createElement('canvas');
+			cvs2.width  = width;
+			cvs2.height = height;
+			const ctx2 = cvs2.getContext('2d');
+			ctx2.drawImage(img1,sx, sy, swidth, sheight,0, 0, width, height);
+			return cvs2.toDataURL("image/jpeg", 0.9);
+		}
+	}
+}
+
+
+function photoimage(){
+	try{
+		if(!pphotohead){pphotohead=0}
+		if(!imageurlthum){alert("読み込み未了");return;}
+		if(!imageurl){alert("読み込み未了");return;}
+		let tmp = L.marker(platlon).toGeoJSON()
+		tmp.properties={
+			shurui:"photo",
+			date:date,
+			img:imageurl,
+			thum:imageurlthum,
+			rotation:pphotohead,
+			width:width,
+			height:height
+		}
+		mapping(tmp)
+		photomarker.features=photomarker.features.concat(fileopen.features);
+		pphotohead=null
+		imageurlthum=null
+		imageurl=null
+		platlon=null
+		document.getElementById("photo").value="";
+	}catch(e){
+		if(!platlon){setTimeout(() => {
+			photoimage()
+		}, "1000")};
+	}
+}
+
+
+async function betumeihozon(){
+	tmp = {"type":"FeatureCollection","features":[]}
+	tmp.features = tmp.features.concat(plinesmoto.features)
+	tmp.features = tmp.features.concat(photomarker.features)
+	if(tmp.features.length == 0){alert("not exist");return;}
+	tmp = JSON.stringify(tmp)
+	const fimei = new Date().toLocaleString("ja-JP")
+	const blob = new Blob([tmp], { type: 'text/plain' });
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fimei + 'photo.txt'; 
+        link.click();
+}
+	
+function yomikomi(){
+	const showOpenFileDialog = () => {
+		return new Promise(resolve => {
+			const input = document.createElement('input');
+			input.type = 'file';
+			input.accept = '.txt, text/plain';
+			input.onchange = event => { resolve(event.target.files[0]); };
+			input.click();
+		});
+	};
+	const readAsText = file => {
+		return new Promise(resolve => {
+			const reader = new FileReader();
+			reader.readAsText(file);
+			reader.onload = () => { resolve(reader.result); };
+		});
+	};
+
+	(async () => {
+		const file = await showOpenFileDialog();
+		const content = await readAsText(file);
+
+		photoobj = JSON.parse(content);
+		photoobj.features = photoobj.features.filter(
+			function(item,index){
+				if(item.properties.shurui =="photo")return true;
+			}
+		)
+		if(photoobj.features.length>0){
+			filtermap(photoobj)
+			photomarker.features=photomarker.features.concat(photoobj.features);
+		}
+		pathobj =  JSON.parse(content);
+
+		pathobj.features = pathobj.features.filter(
+			function(item,index){
+				if(item.properties.shurui =="path")return true;
+			}
+		)
+
+		if(pathobj.features.length>0){
+			filterpath(pathobj)
+			plinesmoto.features=plinesmoto.features.concat(pathobj.features);
+		}
+	})();
+}
+
+
+
+</script>
+</body>
+</html>
