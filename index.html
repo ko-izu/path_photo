@@ -190,7 +190,7 @@ function init() {
 				posaccu.innerText = "エラー"+error.code
 			},{
 				"enableHighAccuracy": true,
-				"timeout": 5000,
+				"timeout": 15000,
 				"maximumAge": 0,
 			}
 		);
@@ -311,7 +311,11 @@ function startgeposieco() {
 	clearInterval(IntervalId);
 	IntervalId = null;
 	navigator.geolocation.clearWatch(watchID);
-	
+	geooption = {
+		"enableHighAccuracy": false,
+		"timeout": 5000,
+		"maximumAge": 0,
+	}
 	getposition()
 	IntervalId = setInterval(getposition, 30000);
 }
@@ -341,10 +345,11 @@ function getposition(){
 	
 	navigator.geolocation.getCurrentPosition(
 		function (pos) {
+			
 			if(latlon==[35,135]){setTimeout(() => 
 				{
 					ref(pos,30)
-				}, "5000")
+				}, "15000")
 			}else{
 				ref(pos,30);
 			}
@@ -359,10 +364,10 @@ function getposition(){
 			posaccu.innerText = "エラー"+error.code
 			geooption = {
 		"enableHighAccuracy": true,
-		"timeout": 5000,
+		"timeout": 10000,
 		"maximumAge": 0,
 			}
-			ref(pos,30)
+			ref(pos,10)
 		},geooption
 	);
 }
@@ -370,7 +375,10 @@ function getposition(){
 function ref(pos,LIMIT){
 	posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
 	postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
-	kyori = L.latLng(latlon).distanceTo(L.latLng([pos.coords.latitude,pos.coords.longitude]))
+	tmplatlon
+		=
+		[pos.coords.latitude,pos.coords.longitude]
+	kyori = L.latLng(latlon).distanceTo(tmplatlon)
 	if(pos.coords.speed){
 		posspee.innerText = Math.round(pos.coords.speed*36/10)+"km/h"
 	}else{
@@ -378,7 +386,7 @@ function ref(pos,LIMIT){
 	}
 	if (kyori > LIMIT && kyori > pos.coords.accuracy){
 		oldlatlon = latlon
-		latlon = [pos.coords.latitude,pos.coords.longitude]
+		latlon = tmplatlon 
 		kyoriruikei = kyoriruikei + kyori;
 		idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
 		map.setView(latlon);
