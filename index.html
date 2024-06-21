@@ -311,11 +311,7 @@ function startgeposieco() {
 	clearInterval(IntervalId);
 	IntervalId = null;
 	navigator.geolocation.clearWatch(watchID);
-	geooption = {
-		"enableHighAccuracy": false,
-		"timeout": Infinity,
-		"maximumAge": 0,
-	}
+	
 	getposition()
 	IntervalId = setInterval(getposition, 30000);
 }
@@ -342,6 +338,7 @@ function stopgeposi()  {
 
 
 function getposition(){
+	
 	navigator.geolocation.getCurrentPosition(
 		function (pos) {
 			if(latlon==[35,135]){setTimeout(() => 
@@ -351,10 +348,21 @@ function getposition(){
 			}else{
 				ref(pos,30);
 			}
+			geooption = {
+		"enableHighAccuracy": false,
+		"timeout": 5000,
+		"maximumAge": 0,
+			}
 		},
 		function (error) {
 			postime.innerText = new Date().toLocaleString("ja-JP")
 			posaccu.innerText = "エラー"+error.code
+			geooption = {
+		"enableHighAccuracy": true,
+		"timeout": 5000,
+		"maximumAge": 0,
+			}
+			ref(pos,30)
 		},geooption
 	);
 }
@@ -415,7 +423,7 @@ function genzai(){
 			latlon = [pos.coords.latitude,pos.coords.longitude]
 			postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
 			posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
-			if(!pline.isEmpty()){
+			if(pline.isEmpty()){
 				map.setView(latlon)
 				track.setLatLng(latlon)
 				camhoko.setLatLng(latlon);
