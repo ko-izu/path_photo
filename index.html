@@ -99,7 +99,7 @@ if ("serviceWorker" in navigator) {
 </style>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
-<body onload="init()" style="overflow-x: hidden;">
+<body style="overflow-x: hidden;">
 <div class="btn-group col-12" role="group" aria-label="Basic radio toggle button group">
 	<input type="radio" class="btn-check" name="btnradio" id="start" autocomplete="off">
 	<label class="btn btn-outline-primary col-4" for="start">TRACK(gps)</label>
@@ -154,8 +154,7 @@ document.getElementById("start").addEventListener("click", startgeposi);
 document.getElementById("starteco").addEventListener("click", startgeposieco);
 document.getElementById("stop").addEventListener("click", stopgeposi);
 var pline,geooption,plines,plinesmoto,pstat
-var latlon=[35,135]
-var Iconstart,Iconstop,track,trackrotate,IntervalId,watchID,kyoriruikei=0,maenotime,width,height,platlon;
+var latlon,Iconstart,Iconstop,track,trackrotate,IntervalId,watchID,kyoriruikei=0,maenotime,width,height,platlon;
 var photomarker,photohead,pphotohead,hphotomarker,camhoko;
 document.getElementById('hozon').addEventListener('click', betumeihozon);
 document.getElementById('hiraku').addEventListener('click', yomikomi);
@@ -170,9 +169,66 @@ var made = document.getElementById("made");
 kara.addEventListener('change', kikan);
 made.addEventListener('change', kikan);
 document.getElementById('btncheck1').addEventListener('click',() =>  {window.close();});
+window.addEventListener("DOMContentLoaded", init);
 
 function init() {
 	screen.orientation.lock('portrait')
+
+	map = L.map('map',{center:latlon,zoom:15,zoomControl:false});
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy;OpenStreetMap contributors',
+		maxZoom: 22,
+		maxNativeZoom: 19,
+	}).addTo(map);
+	map.attributionControl.setPosition('bottomright').setPrefix(false);
+
+	iconurl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABMlJREFUeF7tWdtNG0EUteEPkAIVxFQAVID54yUFKghUAFQQUwGmgtgVxEi8/lgqwFQAqSDmA74A55zVXOt6Ge/uOB6TlWellcF79z7Ofc51uTThV3nC7S8FAEIETDgCIQUmPABCEQwpEFJgwhEIKTDhARC6QEiBkAITjoBTCmxsbKz6xKtcLj9dXl62fcpI8s4EYHt7u/r+/n4A5XbGoVi3232EnMbLy8tpFEUd3zIHAlCtVudnZmZOYPiebyVs/AkE7qOrq6uWT/kDAdjc3LyD8csW4fdQTDyzDJovoNHfpeoL+nkQLIHHEz51uAuvvvdBt4+0aPgCwQoAjP+Z8Pw90qCW9AboItCt4l47Pz+P8ijJlIJRN7hvYVhVv7O+vl6ZmpraA78f+nvQrviqDR8AEAWVAs2LiwtrGowaAJEJvow8gsvo4tV5fn5e9FETPgAA4Q8QXDGC72G8LQ3ix74AIO+kIxAFbUTBSp4oc6HpAwAG1XT4ZeWfTwBoxNbW1iE+TsQg6NMACPsuBmbR9gBg1Z+dnX3ACyxSJRYpCIv/HnT5BsCA0MDndwXCSItiDwCL908BAD3wqQAYx0RQYskHCBoAnfult7e3xevr68fPBoDyTXdoq6LIr+uI0ua/docYAFZdML/TxqL4ZU6J40gB0cnSnbS6jJC2GZ7aaNe3aY7TzwSAvuJnCCIwJOO0iz27wuIEotRoUUwqnDFk5M2rKOjopNzjOLsGQTE3Zw7rGUMAiAcaB2X+d1KZTPV0GWGW2E3OEjEAaDd/8JFa8V0tNqNuXb1HZb658hmGHoYuiKGmftQpm1GBQ9aaBkEA6A4jKO0dCOvrIqaaE2jvl200R71qGRD69PIGgHcrUwSwJpm61KPiwQ53HJG6wzkBkDjBWU9v4zIcuvyWwjtE/eqdb3IBQGG4D5OnQbMsYQcZZwFtwoM1PaOY9GJnoS5ygEr1hURBHgCaKCqHc3Nzy3ozxILCkMK80ER+scgc+PY+zyYoYi0saigrbsH47OD7FnQ7pvzp6WkuUHpTY4pOR9C9ngVAfBpMjsmaqRxQpMh4BOEIjmjA+JsBi5oOQNinY7BTSE6NH9SSfUQMAEPZpvjr6+sjhYHhr4yKfwzhDaDPw9TIL6YgBpmKTJ4pAjoI7RXoO887TRHo2+FwVDZHTmt/hvfX8JwTVBxSUgtgKMOOFVVCrQPahRwKDgUOZDG82cb0uN7E/6z2yzr3pf0aXbLa+xkBGEjE84B+DtR2pRAm+zp7L55Xk+usoSxOvGTh3beo0TVIQjvNLs3eCQAw79vNaSFUkowJwiiM1jyYXnpXKEYKjV6cOAOQVrwYAXjOOvDVpEBvI5Os/Hr8HDUA5IcfZXZ0LZJoNOt7XRjjHp8nAgDWWZ4jr+2kyLW4LjIDF6ejBEM7w/BN6lGyjcFpOmQCYNvIaIacDtGbKz42tknFM3YCJHd2RCYA5GpAYNXv7eZMStzC+J1xGC9gmJU5O0KclkYP/shSR1uruUZcLgCEKYHgRMj/OSNkrcxclXGhJxDS6/P+KGPj7wSAi4JFoQ0AFMVTvvQMEeAL2aLwDRFQFE/50jNEgC9ki8I3REBRPOVLzxABvpAtCt8QAUXxlC89QwT4QrYofP8Ck3EhDeomx8cAAAAASUVORK5CYII="
+	Iconstart = L.icon({
+		iconUrl: iconurl,
+		iconAnchor: [24, 36],
+		iconSize: [48, 48],
+		className:'blinking',
+	});
+
+	Iconstop = L.icon({
+		iconUrl: iconurl,
+		iconAnchor: [24, 36],
+		iconSize: [48, 48],
+	});
+
+	plines = L.featureGroup().addTo(map);
+	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
+	plinesmoto = {"type":"FeatureCollection","features":[]}
+
+	photomarker = {"type":"FeatureCollection","features":[]}
+	hphotomarker = L.markerClusterGroup({
+		spiderfyOnMaxZoom: true,
+		showCoverageOnHover: false,
+		removeOutsideVisibleBounds: true,
+		zoomToBoundsOnClick: true
+	}).addTo(map);
+	
+	triicon = L.divIcon({
+	className:'trian',
+	iconSize: [0, 0]
+	});
+
+	track = L.marker([0,0], {
+		icon: Iconstop,
+		rotationAngle: 0,
+		rotationOrigin:'bottom center',
+	}).addTo(map);
+
+	camhoko = L.marker([0,0], {
+		icon: triicon,
+		rotationAngle: 0,
+		rotationOrigin:'bottom center',
+		opacity : 0
+	}).addTo(map)
+	
+	nowdate = new Date()
+	kara.value = new Date(nowdate- nowdate.getTimezoneOffset() * 60000-86400000).toISOString().slice(0, -5)
+
 	var noSleep = new NoSleep();
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
@@ -197,60 +253,6 @@ function init() {
 	}else{
 		alert("位置情報機能なし")
 	}
-	map = L.map('map',{center:latlon,zoom:15,zoomControl:false});
-	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy;OpenStreetMap contributors',
-		maxZoom: 22,
-		maxNativeZoom: 19,
-	}).addTo(map);
-	map.attributionControl.setPosition('bottomright').setPrefix(false);
-
-	iconurl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABMlJREFUeF7tWdtNG0EUteEPkAIVxFQAVID54yUFKghUAFQQUwGmgtgVxEi8/lgqwFQAqSDmA74A55zVXOt6Ge/uOB6TlWellcF79z7Ofc51uTThV3nC7S8FAEIETDgCIQUmPABCEQwpEFJgwhEIKTDhARC6QEiBkAITjoBTCmxsbKz6xKtcLj9dXl62fcpI8s4EYHt7u/r+/n4A5XbGoVi3232EnMbLy8tpFEUd3zIHAlCtVudnZmZOYPiebyVs/AkE7qOrq6uWT/kDAdjc3LyD8csW4fdQTDyzDJovoNHfpeoL+nkQLIHHEz51uAuvvvdBt4+0aPgCwQoAjP+Z8Pw90qCW9AboItCt4l47Pz+P8ijJlIJRN7hvYVhVv7O+vl6ZmpraA78f+nvQrviqDR8AEAWVAs2LiwtrGowaAJEJvow8gsvo4tV5fn5e9FETPgAA4Q8QXDGC72G8LQ3ix74AIO+kIxAFbUTBSp4oc6HpAwAG1XT4ZeWfTwBoxNbW1iE+TsQg6NMACPsuBmbR9gBg1Z+dnX3ACyxSJRYpCIv/HnT5BsCA0MDndwXCSItiDwCL908BAD3wqQAYx0RQYskHCBoAnfult7e3xevr68fPBoDyTXdoq6LIr+uI0ua/docYAFZdML/TxqL4ZU6J40gB0cnSnbS6jJC2GZ7aaNe3aY7TzwSAvuJnCCIwJOO0iz27wuIEotRoUUwqnDFk5M2rKOjopNzjOLsGQTE3Zw7rGUMAiAcaB2X+d1KZTPV0GWGW2E3OEjEAaDd/8JFa8V0tNqNuXb1HZb658hmGHoYuiKGmftQpm1GBQ9aaBkEA6A4jKO0dCOvrIqaaE2jvl200R71qGRD69PIGgHcrUwSwJpm61KPiwQ53HJG6wzkBkDjBWU9v4zIcuvyWwjtE/eqdb3IBQGG4D5OnQbMsYQcZZwFtwoM1PaOY9GJnoS5ygEr1hURBHgCaKCqHc3Nzy3ozxILCkMK80ER+scgc+PY+zyYoYi0saigrbsH47OD7FnQ7pvzp6WkuUHpTY4pOR9C9ngVAfBpMjsmaqRxQpMh4BOEIjmjA+JsBi5oOQNinY7BTSE6NH9SSfUQMAEPZpvjr6+sjhYHhr4yKfwzhDaDPw9TIL6YgBpmKTJ4pAjoI7RXoO887TRHo2+FwVDZHTmt/hvfX8JwTVBxSUgtgKMOOFVVCrQPahRwKDgUOZDG82cb0uN7E/6z2yzr3pf0aXbLa+xkBGEjE84B+DtR2pRAm+zp7L55Xk+usoSxOvGTh3beo0TVIQjvNLs3eCQAw79vNaSFUkowJwiiM1jyYXnpXKEYKjV6cOAOQVrwYAXjOOvDVpEBvI5Os/Hr8HDUA5IcfZXZ0LZJoNOt7XRjjHp8nAgDWWZ4jr+2kyLW4LjIDF6ejBEM7w/BN6lGyjcFpOmQCYNvIaIacDtGbKz42tknFM3YCJHd2RCYA5GpAYNXv7eZMStzC+J1xGC9gmJU5O0KclkYP/shSR1uruUZcLgCEKYHgRMj/OSNkrcxclXGhJxDS6/P+KGPj7wSAi4JFoQ0AFMVTvvQMEeAL2aLwDRFQFE/50jNEgC9ki8I3REBRPOVLzxABvpAtCt8QAUXxlC89QwT4QrYofP8Ck3EhDeomx8cAAAAASUVORK5CYII="
-	Iconstart = L.icon({
-		iconUrl: iconurl,
-		iconAnchor: [24, 36],
-		iconSize: [48, 48],
-		className:'blinking',
-	});
-
-	Iconstop = L.icon({
-		iconUrl: iconurl,
-		iconAnchor: [24, 36],
-		iconSize: [48, 48],
-	});
-
-	track = L.marker(latlon, {
-		icon: Iconstop,
-		rotationAngle: 0,
-		rotationOrigin:'bottom center',
-	}).addTo(map);
-
-	plines = L.featureGroup().addTo(map);
-	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
-	plinesmoto = {"type":"FeatureCollection","features":[]}
-
-	photomarker = {"type":"FeatureCollection","features":[]}
-	hphotomarker = L.markerClusterGroup({
-		spiderfyOnMaxZoom: true,
-		showCoverageOnHover: false,
-		removeOutsideVisibleBounds: true,
-		zoomToBoundsOnClick: true
-	}).addTo(map);
-	
-	nowdate = new Date()
-	kara.value = new Date(nowdate- nowdate.getTimezoneOffset() * 60000-86400000).toISOString().slice(0, -5)
-	
-	triicon = L.divIcon({
-	className:'trian',
-	iconSize: [0, 0]
-	});	
-	camhoko = L.marker(latlon, {
-		icon: triicon,
-		rotationAngle: 0,
-		rotationOrigin:'bottom center',
-		opacity : 0
-	}).addTo(map)
-	window.addEventListener("DOMContentLoaded", init);
 }
 
 function orientation(event) {
@@ -342,11 +344,9 @@ function stopgeposi()  {
 
 
 function getposition(){
-	
 	navigator.geolocation.getCurrentPosition(
 		function (pos) {
-			
-			if(latlon==[35,135]){setTimeout(() => 
+			if(latlon==[0,0]){setTimeout(() => 
 				{
 					ref(pos,30)
 				}, "15000")
@@ -354,18 +354,18 @@ function getposition(){
 				ref(pos,30);
 			}
 			geooption = {
-		"enableHighAccuracy": false,
-		"timeout": 5000,
-		"maximumAge": 0,
+				"enableHighAccuracy": false,
+				"timeout": 5000,
+				"maximumAge": 0,
 			}
 		},
 		function (error) {
 			postime.innerText = new Date().toLocaleString("ja-JP")
 			posaccu.innerText = "エラー"+error.code
 			geooption = {
-		"enableHighAccuracy": true,
-		"timeout": 10000,
-		"maximumAge": 0,
+				"enableHighAccuracy": true,
+				"timeout": 10000,
+				"maximumAge": 0,
 			}
 			ref(pos,10)
 		},geooption
@@ -375,34 +375,35 @@ function getposition(){
 function ref(pos,LIMIT){
 	posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
 	postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
-	tmplatlon
-		=
-		[pos.coords.latitude,pos.coords.longitude]
-	kyori = L.latLng(latlon).distanceTo(tmplatlon)
-	if(pos.coords.speed){
-		posspee.innerText = Math.round(pos.coords.speed*36/10)+"km/h"
+	tmplatlon=[pos.coords.latitude,pos.coords.longitude]
+	tmpspee=pos.coords.speed
+	tmptimestamp=pos.timestamp
+	tmpaccu=pos.coords.accuracy
+	tmphead=pos.coords.heading
+	oldlatlon=track.getLatLng()
+	kyori = L.latLng(oldlatlon).distanceTo(tmplatlon)
+	if(tmpspee){
+		posspee.innerText = Math.round(tmpspee*36/10)+"km/h"
 	}else{
-		posspee.innerText = Math.round(kyori / (pos.timestamp - maenotime) * 3600)+"km/h"
+		posspee.innerText = Math.round(kyori / (tmptimestamp - maenotime) * 3600)+"km/h"
 	}
-	if (kyori > LIMIT && kyori > pos.coords.accuracy){
-		oldlatlon = latlon
-		latlon = tmplatlon 
+	if (kyori > LIMIT && kyori > tmpaccu){
 		kyoriruikei = kyoriruikei + kyori;
 		idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
-		map.setView(latlon);
-		tmpbear = bearing(oldlatlon, latlon)
-		if(pos.coords.heading){
-			var dindex = Math.round( pos.coords.heading / 22.5 )
+		tmpbear = bearing(oldlatlon, tmplatlon)
+		if(tmphead){
+			var dindex = Math.round( tmphead / 22.5 )
 		}else{
 			var dindex = Math.round( tmpbear / 22.5 )
 		}
 		var dname = ["北","北北東","北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西", "北"];
 		posdire.innerText = dname[dindex]
 		track.setRotationAngle(tmpbear-90)
-		track.setLatLng(latlon)
-		pline.addLatLng(latlon);
-		camhoko.setLatLng(latlon);
-		maenotime = pos.timestamp
+		track.setLatLng(tmplatlon)
+		pline.addLatLng(tmplatlon);
+		camhoko.setLatLng(tmplatlon);
+		maenotime = tmptimestam
+		latlon = tmplatlon
 	}else{
 		idokyori.innerText = Math.round(kyoriruikei)+"m（"+Math.round(kyori)+"m）"
 	}
@@ -411,7 +412,7 @@ function ref(pos,LIMIT){
 function watchposition(){
 	watchID = navigator.geolocation.watchPosition(
 		function (pos) { 
-			if(latlon==[35,135]){setTimeout(() => {
+			if(latlon==[0,0]){setTimeout(() => {
 					ref(pos,10)
 				}, "5000")
 			}else{
@@ -428,10 +429,10 @@ function watchposition(){
 function genzai(){
 	navigator.geolocation.getCurrentPosition(
 		function (pos) { 
-			latlon = [pos.coords.latitude,pos.coords.longitude]
 			postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
 			posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
 			if(pline.isEmpty()){
+				latlon = [pos.coords.latitude,pos.coords.longitude]
 				map.setView(latlon)
 				track.setLatLng(latlon)
 				camhoko.setLatLng(latlon);
@@ -444,7 +445,7 @@ function genzai(){
 			posaccu.innerText = "エラー"+error.code
 		},{
 			"enableHighAccuracy": true,
-			"timeout": Infinity,
+			"timeout": 10000,
 			"maximumAge": 0,
 		}
 	)
@@ -724,8 +725,6 @@ function yomikomi(){
 		}
 	})();
 }
-
-
 
 </script>
 </body>
