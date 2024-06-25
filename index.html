@@ -294,6 +294,7 @@ function startgeposi() {
 	window.addEventListener("deviceorientationabsolute",orientation,true);
 	pstat=Date().toLocaleString("ja-JP")
 	track.setIcon(Iconstart)
+	pline.addLatLng(track.getLatLng());
 	navigator.geolocation.clearWatch(watchID);
 	clearInterval(IntervalId);
 	IntervalId = null;
@@ -310,6 +311,7 @@ function startgeposieco() {
 	camhoko.setOpacity(0)
 	pstat=new Date().toLocaleString("ja-JP")
 	track.setIcon(Iconstart)
+	pline.addLatLng(track.getLatLng());
 	clearInterval(IntervalId);
 	IntervalId = null;
 	navigator.geolocation.clearWatch(watchID);
@@ -390,15 +392,17 @@ function ref(pos,LIMIT){
 	if (kyori > LIMIT && kyori > tmpaccu){
 		kyoriruikei = kyoriruikei + kyori;
 		idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
-		tmpbear = bearing(oldlatlon, tmplatlon)
 		if(tmphead){
 			var dindex = Math.round( tmphead / 22.5 )
+			track.setRotationAngle(tmphead-90)
 		}else{
+			tmpbear = bearing(oldlatlon, tmplatlon)
 			var dindex = Math.round( tmpbear / 22.5 )
+			track.setRotationAngle(tmpbear-90)
 		}
 		var dname = ["北","北北東","北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西", "北"];
 		posdire.innerText = dname[dindex]
-		track.setRotationAngle(tmpbear-90)
+		map.setView(tmplatlon)
 		track.setLatLng(tmplatlon)
 		pline.addLatLng(tmplatlon);
 		camhoko.setLatLng(tmplatlon);
