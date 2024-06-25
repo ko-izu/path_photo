@@ -382,7 +382,7 @@ function ref(pos,LIMIT){
 	tmptimestamp=pos.timestamp
 	tmpaccu=pos.coords.accuracy
 	tmphead=pos.coords.heading
-	oldlatlon=track.getLatLng()
+	oldlatlon=[track.getLatLng().lat,track.getLatLng().lng]
 	kyori = L.latLng(oldlatlon).distanceTo(tmplatlon)
 	if(tmpspee){
 		posspee.innerText = Math.round(tmpspee*36/10)+"km/h"
