@@ -392,6 +392,10 @@ function ref(pos,LIMIT){
 	if (kyori > LIMIT && kyori > tmpaccu){
 		kyoriruikei = kyoriruikei + kyori;
 		idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
+		map.setView(tmplatlon)
+		track.setLatLng(tmplatlon)
+		pline.addLatLng(tmplatlon);
+		camhoko.setLatLng(tmplatlon);
 		if(tmphead){
 			var dindex = Math.round( tmphead / 22.5 )
 			track.setRotationAngle(tmphead-90)
@@ -402,10 +406,6 @@ function ref(pos,LIMIT){
 		}
 		var dname = ["北","北北東","北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西", "北"];
 		posdire.innerText = dname[dindex]
-		map.setView(tmplatlon)
-		track.setLatLng(tmplatlon)
-		pline.addLatLng(tmplatlon);
-		camhoko.setLatLng(tmplatlon);
 		maenotime = tmptimestam
 		latlon = tmplatlon
 	}else{
