@@ -225,7 +225,9 @@ function init() {
 		rotationOrigin:'bottom center',
 		opacity : 0
 	}).addTo(map)
-	yomikomi()
+	setTimeout(() => {
+		yomikomi()
+	}, "0")
 	nowdate = new Date()
 	kara.value = new Date(nowdate- nowdate.getTimezoneOffset() * 60000-86400000).toISOString().slice(0, -5)
 
