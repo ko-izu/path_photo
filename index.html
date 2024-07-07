@@ -225,7 +225,7 @@ function init() {
 		rotationOrigin:'bottom center',
 		opacity : 0
 	}).addTo(map)
-	
+	yomikomi()
 	nowdate = new Date()
 	kara.value = new Date(nowdate- nowdate.getTimezoneOffset() * 60000-86400000).toISOString().slice(0, -5)
 
@@ -435,9 +435,9 @@ function genzai(){
 		function (pos) { 
 			postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
 			posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
+			latlon = [pos.coords.latitude,pos.coords.longitude]
+			map.setView(latlon)
 			if(pline.isEmpty()){
-				latlon = [pos.coords.latitude,pos.coords.longitude]
-				map.setView(latlon)
 				track.setLatLng(latlon)
 				camhoko.setLatLng(latlon);
 			}else{
@@ -670,6 +670,7 @@ function photoimage(){
 
 
 async function betumeihozon(){
+	stopgeposi();
 	tmp = {"type":"FeatureCollection","features":[]}
 	tmp.features = tmp.features.concat(plinesmoto.features)
 	tmp.features = tmp.features.concat(photomarker.features)
