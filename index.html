@@ -226,7 +226,7 @@ function init() {
 		opacity : 0
 	}).addTo(map)
 	if (window.confirm("開きますか?")) {
-		yomikomi()
+		yomikomi
 	}
 	nowdate = new Date()
 	kara.value = new Date(nowdate- nowdate.getTimezoneOffset() * 60000-86400000).toISOString().slice(0, -5)
