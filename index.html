@@ -731,17 +731,17 @@ function yomikomi(){
 		}
 	})();
 }
-var kaiten
+var kaiten=0
 function rotatemap(){
 	let element = document.getElementById('map');
-	if(kaiten==null){
-	element.style="width: 50vh; height: auto; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg);"
-	kaiten=true
+	if(kaiten==0){
+	element.style="width: auto; height: 50vh; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg);"
+	kaiten=90
 	}else{
-	element.style="width: 50vh; height: auto; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(0deg);-ms-transform:rotate(0deg);transform:rotate(0deg);"
-	kaiten=null
+	element.style="width: auto; height: 50vh; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(0deg);-ms-transform:rotate(0deg);transform:rotate(0deg);"
+	kaiten=0
 	}
 }	
 </script>
-</body>
+</body>9
 </html>
