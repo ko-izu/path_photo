@@ -1,6 +1,6 @@
 var CACHE_NAME = 'pwa-sample-cache-v2';
 var urlsToCache = [
-    '/',
+    '/index.html',
     '/manifest.webmanifest',
     '/sw.js',
 "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js",
