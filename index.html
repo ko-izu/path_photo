@@ -170,7 +170,18 @@ kara.addEventListener('change', kikan);
 made.addEventListener('change', kikan);
 document.getElementById('btncheck1').addEventListener('click',() =>  {window.close();});
 window.addEventListener("DOMContentLoaded", init);
-
+window.addEventListener("orientationchange", () => {
+  getDirection();
+});
+function getDirection() {
+  var direction = Math.abs(window.orientation);
+  let element=document.getElementById('map')
+  if(direction == 90) {
+    element.style="width:60vw;height: 90vh; border: solid 0px;box-sizing:border-box;"
+  } else {
+    element.style="width:100vw;height: 60vh; border: solid 0px;box-sizing:border-box;"
+  }
+}
 function init() {
 
 	map = L.map('map',{center:latlon,zoom:15,zoomControl:false});
