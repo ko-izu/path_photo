@@ -176,9 +176,9 @@ window.addEventListener("orientationchange", () => {
 function getDirection() {
   let element=document.getElementById('map')
   if(window.innerHeight > window.innerWidth) {
-    element.style="width:100vw;height: 60vh; border: solid 0px;box-sizing:border-box;"
+    element.style="width:auto;height: 60vh; border: solid 0px;box-sizing:border-box;"
   } else {
-    element.style="width:60vw;height: 90vh; border: solid 0px;box-sizing:border-box;"
+    element.style="width:"+window.innerWidth/100*60+"px;height:auto; border: solid 0px;box-sizing:border-box;"
   }
 }
 function init() {
