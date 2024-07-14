@@ -99,7 +99,7 @@ if ("serviceWorker" in navigator) {
 </style>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
-<body style="overflow-x: hidden;width:100vw;">
+<body style="overflow-x: hidden;">
 <div class="btn-group col-12" role="group" aria-label="Basic radio toggle button group">
 	<input type="radio" class="btn-check" name="btnradio" id="start" autocomplete="off">
 	<label class="btn btn-outline-primary col-4" for="start">TRACK(gps)</label>
@@ -178,7 +178,7 @@ function getDirection() {
   if(window.innerHeight > window.innerWidth) {
     element.style="width:auto;height: 60vh; border: solid 0px;box-sizing:border-box;"
   } else {
-    element.style="width:"+window.innerWidth/100*60+"px;height:auto; border: solid 0px;box-sizing:border-box;"
+    element.style="width:auto;height:80vh; border: solid 0px;box-sizing:border-box;"
   }
 }
 function init() {
