@@ -733,8 +733,13 @@ function yomikomi(){
 }
 var mapdegval =0
 function rotatemap(){
+	let element = document.getElementById('map');
 	mapdeg=mapdegval+90+"deg"
-	map.style="width: 60vh; height: auto;-webkit-transform:rotate(mapdeg);-ms-transform:rotate(mapdeg);transform:rotate(mapdeg)"
+	element.style.width="60vh"
+	element.style.height="auto"
+	element.style.-webkit-transform="rotate(mapdeg)"
+	element.style.-ms-transform="rotate(mapdeg)"
+	element.style.transform="rotate(mapdeg)"
 }	
 </script>
 </body>
