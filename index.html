@@ -731,15 +731,9 @@ function yomikomi(){
 		}
 	})();
 }
-var mapdegval =0
 function rotatemap(){
 	let element = document.getElementById('map');
-	mapdeg=mapdegval+90+"deg"
-	element.style.width="60vh"
-	element.style.height="auto"
-	element.style.-webkit-transform="rotate(mapdeg)"
-	element.style.-ms-transform="rotate(mapdeg)"
-	element.style.transform="rotate(mapdeg)"
+	element.style="width: auto; height: 60vh; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg);"
 }	
 </script>
 </body>
