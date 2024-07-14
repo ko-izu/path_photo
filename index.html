@@ -110,12 +110,12 @@ if ("serviceWorker" in navigator) {
 </div>
 <div id="map" style="width: auto; height: 60vh; border: solid 0px;box-sizing:border-box;"></div>
 <div class="btn-group col-12" role="group">
-<button type="button" class="btn btn-outline-primary"  style="width: 15%;box-sizing:border-box" id ="hiraku">開く</button>
-<button type="button" class="btn btn-outline-primary"  style="width: 15%;box-sizing:border-box" id ="hozon">保存</button>
-<button type="button" class="btn btn-outline-primary"  style="width: 15%;box-sizing:border-box" id ="mieru">表示</button>
-<button type="button" class="btn btn-outline-primary"  style="width: 20%;box-sizing:border-box" id ="kesu">非表示</button>
-<button type="button" class="btn btn-outline-primary"  style="width: 20%;box-sizing:border-box" id ="genzai">現在地</button>
-<button type="button" class="btn btn-outline-primary"  style="width: 15%;box-sizing:border-box" id ="btncheck2">回転</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 16%;box-sizing:border-box" id ="hiraku">開く</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 16%;box-sizing:border-box" id ="hozon">保存</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 16%;box-sizing:border-box" id ="mieru">表示</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 18%;box-sizing:border-box" id ="kesu">非表示</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 18%;box-sizing:border-box" id ="genzai">現在地</button>
+<button type="button" class="btn btn-outline-primary"  style="width: 16%;box-sizing:border-box" id ="btncheck2">回転</button>
 </div>
 <div class="row">
 	<div   style="width: 20%;box-sizing:border-box">
@@ -733,7 +733,11 @@ function yomikomi(){
 }
 function rotatemap(){
 	let element = document.getElementById('map');
-	element.style="width: auto; height: 60vh; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg);"
+	if(element.style.width=="auto"){
+	element.style="width: 60vh; height: auto; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg);"
+	}else{
+	element.style="width: auto; height: 60vh; border: solid 0px;box-sizing:border-box;-webkit-transform:rotate(0deg);-ms-transform:rotate(0deg);transform:rotate(0deg);"	
+	}
 }	
 </script>
 </body>
