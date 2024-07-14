@@ -143,7 +143,7 @@ if ("serviceWorker" in navigator) {
 	<input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
 	<label class="btn btn-outline-danger col-6  btn-sm" for="btncheck1">close</label>
 	<input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-	<label class="btn btn-outline-danger col-6  btn-sm" for="btncheck1">90度回転</label>
+	<label class="btn btn-outline-danger col-6  btn-sm" for="btncheck2">90度回転</label>
 </div>
 <script type="text/javascript">
 var map;
@@ -170,7 +170,7 @@ var kara = document.getElementById("kara");
 var made = document.getElementById("made");
 kara.addEventListener('change', kikan);
 made.addEventListener('change', kikan);
-document.getElementById('btncheck1').addEventListener('click',() =>  {betumeihozon();window.close();});
+document.getElementById('btncheck1').addEventListener('click',() =>  {window.close();});
 document.getElementById('btncheck2').addEventListener('click',() =>  {rotatemap()});
 window.addEventListener("DOMContentLoaded", init);
 
