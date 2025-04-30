@@ -251,6 +251,9 @@ function init() {
 	}else{
 		alert("位置情報機能なし")
 	}
+	
+	const lscontent = localStorage.getItem('ichijidata');
+	if (lscontent) {opendata(lscontent);}
 }
 
 function orientation(event) {
@@ -338,6 +341,7 @@ function stopgeposi()  {
 	}
 	filterpath(tmppline)
 	plinesmoto.features.push(tmppline);
+	savelscontent()
 	pline.remove()
 	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
 }
@@ -654,6 +658,7 @@ function photoimage(){
 		}
 		mapping(tmp)
 		photomarker.features=photomarker.features.concat(fileopen.features);
+		savelscontent()
 		pphotohead=null
 		imageurlthum=null
 		imageurl=null
@@ -676,10 +681,10 @@ async function betumeihozon(){
 	tmp = JSON.stringify(tmp)
 	const fimei = new Date().toLocaleString("ja-JP")
 	const blob = new Blob([tmp], { type: 'text/plain' });
-        let link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = fimei + 'photo.txt'; 
-        link.click();
+	let link = document.createElement('a');
+	link.href = URL.createObjectURL(blob);
+	link.download = fimei + 'photo.txt'; 
+	link.click();
 }
 	
 function yomikomi(){
@@ -703,31 +708,45 @@ function yomikomi(){
 	(async () => {
 		const file = await showOpenFileDialog();
 		const content = await readAsText(file);
+		opendata(content)
 
-		photoobj = JSON.parse(content);
-		photoobj.features = photoobj.features.filter(
-			function(item,index){
-				if(item.properties.shurui =="photo")return true;
-			}
-		)
-		if(photoobj.features.length>0){
-			filtermap(photoobj)
-			photomarker.features=photomarker.features.concat(photoobj.features);
-		}
-		pathobj =  JSON.parse(content);
-
-		pathobj.features = pathobj.features.filter(
-			function(item,index){
-				if(item.properties.shurui =="path")return true;
-			}
-		)
-
-		if(pathobj.features.length>0){
-			filterpath(pathobj)
-			plinesmoto.features=plinesmoto.features.concat(pathobj.features);
-		}
 	})();
 }
+
+function opendata(CONTENT){
+
+	photoobj = JSON.parse(CONTENT);
+	photoobj.features = photoobj.features.filter(
+		function(item,index){
+			if(item.properties.shurui =="photo")return true;
+		}
+	)
+	if(photoobj.features.length>0){
+		filtermap(photoobj)
+		photomarker.features=photomarker.features.concat(photoobj.features);
+	}
+	pathobj =  JSON.parse(CONTENT);
+	pathobj.features = pathobj.features.filter(
+		function(item,index){
+			if(item.properties.shurui =="path")return true;
+		}
+	)
+
+	if(pathobj.features.length>0){
+		filterpath(pathobj)
+		plinesmoto.features=plinesmoto.features.concat(pathobj.features);
+	}
+}
+
+function savelscontent() {
+
+	var tmp = {"type":"FeatureCollection","features":[]}
+	tmp.features = tmp.features.concat(plinesmoto.features)
+	tmp.features = tmp.features.concat(photomarker.features)
+	tmp = JSON.stringify(tmp)
+	localStorage.setItem('ichijidata', tmp);
+}
+
 </script>
 </body>
 </html>
