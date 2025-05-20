@@ -252,8 +252,8 @@ function init() {
 		alert("位置情報機能なし")
 	}
 	
-	//const lscontent = localStorage.getItem('ichijidata');
-	//if (lscontent) {opendata(lscontent);}
+	var lscontent = localStorage.getItem('ichijidata');
+	if (lscontent) {opendata(lscontent);}
 }
 
 function orientation(event) {
@@ -341,7 +341,6 @@ function stopgeposi()  {
 	}
 	filterpath(tmppline)
 	plinesmoto.features.push(tmppline);
-	savelscontent()
 	pline.remove()
 	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
 }
@@ -398,6 +397,7 @@ function ref(pos,LIMIT){
 		track.setLatLng(tmplatlon)
 		pline.addLatLng(tmplatlon);
 		camhoko.setLatLng(tmplatlon);
+		savelscontent();
 		if(tmphead){
 			var dindex = Math.round( tmphead / 22.5 )
 			track.setRotationAngle(tmphead-90)
@@ -685,9 +685,11 @@ async function betumeihozon(){
 	link.href = URL.createObjectURL(blob);
 	link.download = fimei + 'photo.txt'; 
 	link.click();
+	localStorage.removeItem(ichijidata')
 }
 	
 function yomikomi(){
+	localStorage.removeItem(ichijidata')
 	const showOpenFileDialog = () => {
 		return new Promise(resolve => {
 			const input = document.createElement('input');
@@ -739,7 +741,6 @@ function opendata(CONTENT){
 }
 
 function savelscontent() {
-
 	var tmp = {"type":"FeatureCollection","features":[]}
 	tmp.features = tmp.features.concat(plinesmoto.features)
 	tmp.features = tmp.features.concat(photomarker.features)
