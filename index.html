@@ -153,7 +153,7 @@ var idokyori = document.getElementById("idokyori");
 document.getElementById("start").addEventListener("click", startgeposi);
 document.getElementById("starteco").addEventListener("click", startgeposieco);
 document.getElementById("stop").addEventListener("click", stopgeposi);
-var pline,geooption,plines,plinesmoto,pstat
+var ,geooption,s,plinesmoto,pstat
 var latlon,Iconstart,Iconstop,track,trackrotate,IntervalId,watchID,kyoriruikei=0,maenotime,width,height,platlon;
 var photomarker,photohead,pphotohead,hphotomarker,camhoko;
 document.getElementById('hozon').addEventListener('click', betumeihozon);
@@ -403,7 +403,7 @@ function ref(pos,LIMIT){
 		track.setLatLng(tmplatlon)
 		pline.addLatLng(tmplatlon);
 		camhoko.setLatLng(tmplatlon);
-		savelscontent();
+		savelscontent2();
 		if(tmphead){
 			var dindex = Math.round( tmphead / 22.5 )
 			track.setRotationAngle(tmphead-90)
