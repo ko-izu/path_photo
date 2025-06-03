@@ -1,7 +1,7 @@
 var urlsToCache = [
-    '/index.html',
-    '/manifest.webmanifest',
-    '/sw.js',
+    '/path_photo/index.html',
+    '/path_photo/manifest.webmanifest',
+    '/path_photo/sw.js',
     "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js",
     "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css",
     "https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js",
