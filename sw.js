@@ -1,4 +1,3 @@
-var CACHE_NAME = 'pwa-cache';
 var urlsToCache = [
     '/index.html',
     '/manifest.webmanifest',
@@ -15,7 +14,7 @@ var urlsToCache = [
 self.addEventListener('install', function(event) {
     event.waitUntil(
         caches
-            .open(CACHE_NAME)
+            .open('pwa-cache')
             .then(function(cache) {
                 return cache.addAll(urlsToCache);
             })
