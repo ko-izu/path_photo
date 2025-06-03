@@ -9,7 +9,7 @@ var urlsToCache = [
 "https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css",
 "https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css",
 "https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js",
-"https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+"https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
 ];
 
 self.addEventListener('install', function(event) {
