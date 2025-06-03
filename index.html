@@ -254,6 +254,11 @@ function init() {
 	
 	var lscontent = localStorage.getItem('ichijidata');
 	if (lscontent) {opendata(lscontent);}
+	var lscontent2 = localStorage.getItem('ichijidata2');
+	if (lscontent2) {
+		tmplatlngs =  JSON.parse(lscontent2);
+		pline.setLatLngs(tmplatlngs);
+	}
 }
 
 function orientation(event) {
@@ -343,6 +348,7 @@ function stopgeposi()  {
 	plinesmoto.features.push(tmppline);
 	pline.remove()
 	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
+	savelscontent();
 }
 
 
@@ -748,6 +754,11 @@ function savelscontent() {
 	localStorage.setItem('ichijidata', tmp);
 }
 
+function savelscontent2() {
+	var tmp = pline.getLatLngs()
+	tmp = JSON.stringify(tmp)
+	localStorage.setItem('ichijidata2', tmp);
+}
 </script>
 </body>
 </html>
