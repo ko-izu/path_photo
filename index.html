@@ -145,6 +145,10 @@ if ("serviceWorker" in navigator) {
 </div>
 <script type="text/javascript">
 var map;
+var container = L.DomUtil.get('map');
+if (container != null) {
+    container._leaflet_id = null;
+}
 var postime = document.getElementById("postime");
 var posaccu = document.getElementById("posaccu");
 var posdire = document.getElementById("posdire");
@@ -172,7 +176,6 @@ document.getElementById('btncheck1').addEventListener('click',() =>  {window.clo
 window.addEventListener("DOMContentLoaded", init);
 
 function init() {
-
 	map = L.map('map',{center:latlon,zoom:15,zoomControl:false});
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy;OpenStreetMap contributors',
@@ -691,7 +694,8 @@ async function betumeihozon(){
 	link.href = URL.createObjectURL(blob);
 	link.download = fimei + 'photo.txt'; 
 	link.click();
-	localStorage.removeItem('ichijidata')
+	localStorage.removeItem('ichijidata');
+	localStorage.removeItem('ichijidata2');
 }
 	
 function yomikomi(){
