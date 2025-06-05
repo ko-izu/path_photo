@@ -296,6 +296,7 @@ function orientation(event) {
 }
 	
 function startgeposi() {
+	stopgeposi()
 	window.addEventListener("deviceorientationabsolute",orientation,true);
 	pstat=Date().toLocaleString("ja-JP")
 	track.setIcon(Iconstart)
@@ -312,6 +313,7 @@ function startgeposi() {
 }
 
 function startgeposieco() {
+	stopgeposi()
 	window.removeEventListener("deviceorientationabsolute",orientation,true);
 	camhoko.setOpacity(0)
 	pstat=new Date().toLocaleString("ja-JP")
@@ -337,6 +339,7 @@ function stopgeposi()  {
 	navigator.geolocation.clearWatch(watchID);
 	track.setIcon(Iconstop)
 	if(pline.isEmpty())return
+	if(pline.getLatLngs().length==1)return
 	tmppline = pline.toGeoJSON()
 	tmppline.properties={
 		"shurui":"path",
