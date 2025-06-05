@@ -168,7 +168,11 @@ var kara = document.getElementById("kara");
 var made = document.getElementById("made");
 kara.addEventListener('change', kikan);
 made.addEventListener('change', kikan);
-document.getElementById('btncheck1').addEventListener('click',() =>  {window.close();});
+document.getElementById('btncheck1').addEventListener('click',() =>  {
+	window.close();
+	localStorage.removeItem('ichijidata');
+	localStorage.removeItem('ichijidata2');
+});
 window.addEventListener("DOMContentLoaded", init);
 
 function init() {
@@ -229,6 +233,7 @@ function init() {
 	var noSleep = new NoSleep();
 	genzai()
 	var lscontent = localStorage.getItem('ichijidata');
+	alert(lscontent)
 	if (lscontent) {opendata(lscontent);}
 	var lscontent2 = localStorage.getItem('ichijidata2');
 	if (lscontent2) {
