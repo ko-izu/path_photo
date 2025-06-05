@@ -227,30 +227,30 @@ function init() {
 	kara.value = new Date(nowdate- nowdate.getTimezoneOffset() * 60000-86400000).toISOString().slice(0, -5)
 
 	var noSleep = new NoSleep();
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(
-			function (pos) { 
-				latlon = [pos.coords.latitude,pos.coords.longitude]
-				postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
-				posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
-				map.setView(latlon)
-				track.setLatLng(latlon)
-				camhoko.setLatLng(latlon);
-				maenotime = pos.timestamp
-			},
-			function (error) {
-				postime.innerText = new Date().toLocaleString("ja-JP")
-				posaccu.innerText = "エラー"+error.code
-			},{
-				"enableHighAccuracy": true,
-				"timeout": 15000,
-				"maximumAge": 0,
-			}
-		);
-	}else{
-		alert("位置情報機能なし")
-	}
-	
+	//if (navigator.geolocation) {
+	//	navigator.geolocation.getCurrentPosition(
+	//		function (pos) { 
+	//			latlon = [pos.coords.latitude,pos.coords.longitude]
+	//			postime.innerText = new Date(pos.timestamp).toLocaleString("ja-JP")
+	//			posaccu.innerText = Math.round(pos.coords.accuracy*100)/100+"m"
+	//			map.setView(latlon)
+	//			track.setLatLng(latlon)
+	//			camhoko.setLatLng(latlon);
+	//			maenotime = pos.timestamp
+	//		},
+	//		function (error) {
+	//			postime.innerText = new Date().toLocaleString("ja-JP")
+	//			posaccu.innerText = "エラー"+error.code
+	//		},{
+	//			"enableHighAccuracy": true,
+	//			"timeout": 15000,
+	//			"maximumAge": 0,
+	//		}
+	//	);
+	//}else{
+	//	alert("位置情報機能なし")
+	//}
+	genzai()
 	var lscontent = localStorage.getItem('ichijidata');
 	if (lscontent) {opendata(lscontent);}
 	var lscontent2 = localStorage.getItem('ichijidata2');
@@ -297,6 +297,7 @@ function orientation(event) {
 	
 function startgeposi() {
 	stopgeposi()
+	genzai()
 	window.addEventListener("deviceorientationabsolute",orientation,true);
 	pstat=Date().toLocaleString("ja-JP")
 	track.setIcon(Iconstart)
@@ -314,6 +315,7 @@ function startgeposi() {
 
 function startgeposieco() {
 	stopgeposi()
+	genzai()
 	window.removeEventListener("deviceorientationabsolute",orientation,true);
 	camhoko.setOpacity(0)
 	pstat=new Date().toLocaleString("ja-JP")
