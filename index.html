@@ -235,7 +235,7 @@ function init() {
 	var lscontentp = localStorage.getItem('ichijidatap');
 	alert(lscontentp)
 	if (lscontentp) {
-		photoobj = JSON.parse(lscontent);
+		photoobj = JSON.parse(lscontentp);
 		if(photoobj.features.length>0){
 			filtermap(photoobj)
 			photomarker.features=photomarker.features.concat(photoobj.features);
