@@ -171,6 +171,7 @@ made.addEventListener('change', kikan);
 document.getElementById('btncheck1').addEventListener('click',() =>  {
 	window.close();
 	localStorage.removeItem('ichijidatap');
+	localStorage.removeItem('ichijidata1');
 	localStorage.removeItem('ichijidata2');
 });
 window.addEventListener("DOMContentLoaded", init);
@@ -241,10 +242,10 @@ function init() {
 		}
 	}
 	var lscontent1 = localStorage.getItem('ichijidata1');
-	alert(lscontent1)
 	if (lscontent1) {
 		pathobj =  JSON.parse(lscontent1);
 		if(pathobj.features.length>0){
+	alert(pathobj)			
 			filterpath(pathobj)
 			plinesmoto.features=plinesmoto.features.concat(pathobj.features);
 		}
@@ -688,6 +689,7 @@ async function betumeihozon(){
 	link.download = fimei + 'photo.txt'; 
 	link.click();
 	localStorage.removeItem('ichijidatap');
+	localStorage.removeItem('ichijidata1');
 	localStorage.removeItem('ichijidata2');
 }
 	
