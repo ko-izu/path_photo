@@ -245,7 +245,7 @@ function init() {
 	if (lscontent1) {
 		pathobj =  JSON.parse(lscontent1);
 		if(pathobj.features.length>0){
-			plines.addLayer(L.geoJSON(tmpfilter2,{
+			plines.addLayer(L.geoJSON(pathobj,{
 				color: 'blue',
 				weight: 10,
 				opacity:0.2,
