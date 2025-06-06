@@ -170,7 +170,7 @@ kara.addEventListener('change', kikan);
 made.addEventListener('change', kikan);
 document.getElementById('btncheck1').addEventListener('click',() =>  {
 	window.close();
-	localStorage.removeItem('ichijidata');
+	localStorage.removeItem('ichijidatap');
 	localStorage.removeItem('ichijidata2');
 });
 window.addEventListener("DOMContentLoaded", init);
@@ -232,9 +232,15 @@ function init() {
 
 	var noSleep = new NoSleep();
 	genzai()
-	var lscontent = localStorage.getItem('ichijidata');
-	alert(lscontent)
-	if (lscontent) {opendata(lscontent);}
+	var lscontentp = localStorage.getItem('ichijidatap');
+	alert(lscontentp)
+	if (lscontentp) {
+		photoobj = JSON.parse(lscontent);
+		if(photoobj.features.length>0){
+			filtermap(photoobj)
+			photomarker.features=photomarker.features.concat(photoobj.features);
+		}
+	}
 	var lscontent2 = localStorage.getItem('ichijidata2');
 	if (lscontent2) {
 		tmplatlngs =  JSON.parse(lscontent2);
@@ -646,7 +652,7 @@ function photoimage(){
 		}
 		mapping(tmp)
 		photomarker.features=photomarker.features.concat(fileopen.features);
-		savelscontent()
+		savelscontentp()
 		pphotohead=null
 		imageurlthum=null
 		imageurl=null
@@ -673,12 +679,12 @@ async function betumeihozon(){
 	link.href = URL.createObjectURL(blob);
 	link.download = fimei + 'photo.txt'; 
 	link.click();
-	localStorage.removeItem('ichijidata');
+	localStorage.removeItem('ichijidatap');
 	localStorage.removeItem('ichijidata2');
 }
 	
 function yomikomi(){
-	localStorage.removeItem('ichijidata')
+	localStorage.removeItem('ichijidatap')
 	const showOpenFileDialog = () => {
 		return new Promise(resolve => {
 			const input = document.createElement('input');
@@ -729,12 +735,11 @@ function opendata(CONTENT){
 	}
 }
 
-function savelscontent() {
+function savelscontentp() {
 	var tmp = {"type":"FeatureCollection","features":[]}
-	tmp.features = tmp.features.concat(plinesmoto.features)
 	tmp.features = tmp.features.concat(photomarker.features)
 	tmp = JSON.stringify(tmp)
-	localStorage.setItem('ichijidata', tmp);
+	localStorage.setItem('ichijidatap', tmp);
 }
 
 function savelscontent2() {
