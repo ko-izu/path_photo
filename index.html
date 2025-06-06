@@ -233,12 +233,20 @@ function init() {
 	var noSleep = new NoSleep();
 	genzai()
 	var lscontentp = localStorage.getItem('ichijidatap');
-	alert(lscontentp)
 	if (lscontentp) {
 		photoobj = JSON.parse(lscontentp);
 		if(photoobj.features.length>0){
 			filtermap(photoobj)
 			photomarker.features=photomarker.features.concat(photoobj.features);
+		}
+	}
+	var lscontent1 = localStorage.getItem('ichijidata1');
+	alert(lscontent1)
+	if (lscontent1) {
+		pathobj =  JSON.parse(lscontent1);
+		if(pathobj.features.length>0){
+			filterpath(pathobj)
+			plinesmoto.features=plinesmoto.features.concat(pathobj.features);
 		}
 	}
 	var lscontent2 = localStorage.getItem('ichijidata2');
@@ -336,7 +344,7 @@ function stopgeposi()  {
 	plinesmoto.features.push(tmppline);
 	pline.remove()
 	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
-	savelscontent();
+	savelscontent1();
 }
 
 
@@ -742,6 +750,13 @@ function savelscontentp() {
 	localStorage.setItem('ichijidatap', tmp);
 }
 
+function savelscontent1() {
+	var tmp = {"type":"FeatureCollection","features":[]}
+	tmp.features = tmp.features.concat(plinesmoto.features)
+	tmp = JSON.stringify(tmp)
+	localStorage.setItem('ichijidata1', tmp);
+}
+	
 function savelscontent2() {
 	var tmp = pline.getLatLngs()
 	tmp = JSON.stringify(tmp)
