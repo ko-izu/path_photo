@@ -237,7 +237,6 @@ function init() {
 	if (lscontentp) {
 		photoobj = JSON.parse(lscontentp);
 		if(photoobj.features.length>0){
-			filtermap(photoobj)
 			photomarker.features=photomarker.features.concat(photoobj.features);
 		}
 	}
@@ -246,9 +245,9 @@ function init() {
 		pathobj =  JSON.parse(lscontent1);
 		if(pathobj.features.length>0){
 			plinesmoto.features=plinesmoto.features.concat(pathobj.features);
-			kikan();
 		}
 	}
+	kikan();
 	var lscontent2 = localStorage.getItem('ichijidata2');
 	if (lscontent2) {
 		tmplatlngs =  JSON.parse(lscontent2);
