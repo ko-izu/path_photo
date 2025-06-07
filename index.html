@@ -245,22 +245,8 @@ function init() {
 	if (lscontent1) {
 		pathobj =  JSON.parse(lscontent1);
 		if(pathobj.features.length>0){
-		//	plines.addLayer(L.geoJSON(pathobj,{
-		//		color: 'blue',
-		//		weight: 10,
-		//		opacity:0.2,
-		//		onEachFeature: function(feature, layer){
-		//			layer.on("contextmenu",function(e){
-		//				if (window.confirm("削除しますか?")) {
-		//					map.removeLayer(layer)
-		//					tmpdate = layer.toGeoJSON().properties.start
-		//					findIndex = plinesmoto.features.findIndex((item) => item.properties.start === tmpdate && item.properties.shurui === "path");
-		//					plinesmoto.features.splice(findIndex, 1);
-		//				}
-		//			})
-		//		}
-		//	}));
 			plinesmoto.features=plinesmoto.features.concat(pathobj.features);
+			kikan();
 		}
 	}
 	var lscontent2 = localStorage.getItem('ichijidata2');
@@ -359,6 +345,7 @@ function stopgeposi()  {
 	pline.remove()
 	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
 	savelscontent1();
+	localStorage.removeItem('ichijidata2');
 }
 
 
@@ -703,11 +690,11 @@ async function betumeihozon(){
 	link.click();
 	localStorage.removeItem('ichijidatap');
 	localStorage.removeItem('ichijidata1');
-	localStorage.removeItem('ichijidata2');
 }
 	
 function yomikomi(){
-	localStorage.removeItem('ichijidatap')
+	localStorage.removeItem('ichijidatap');
+	localStorage.removeItem('ichijidata1')
 	const showOpenFileDialog = () => {
 		return new Promise(resolve => {
 			const input = document.createElement('input');
@@ -742,7 +729,6 @@ function opendata(CONTENT){
 		}
 	)
 	if(photoobj.features.length>0){
-		filtermap(photoobj)
 		photomarker.features=photomarker.features.concat(photoobj.features);
 	}
 	pathobj =  JSON.parse(CONTENT);
@@ -751,11 +737,10 @@ function opendata(CONTENT){
 			if(item.properties.shurui =="path")return true;
 		}
 	)
-
 	if(pathobj.features.length>0){
-		filterpath(pathobj)
 		plinesmoto.features=plinesmoto.features.concat(pathobj.features);
 	}
+	kikan();
 }
 
 function savelscontentp() {
