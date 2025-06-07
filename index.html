@@ -245,21 +245,21 @@ function init() {
 	if (lscontent1) {
 		pathobj =  JSON.parse(lscontent1);
 		if(pathobj.features.length>0){
-			plines.addLayer(L.geoJSON(pathobj,{
-				color: 'blue',
-				weight: 10,
-				opacity:0.2,
-				onEachFeature: function(feature, layer){
-					layer.on("contextmenu",function(e){
-						if (window.confirm("削除しますか?")) {
-							map.removeLayer(layer)
-							tmpdate = layer.toGeoJSON().properties.start
-							findIndex = plinesmoto.features.findIndex((item) => item.properties.start === tmpdate && item.properties.shurui === "path");
-							plinesmoto.features.splice(findIndex, 1);
-						}
-					})
-				}
-			}));
+		//	plines.addLayer(L.geoJSON(pathobj,{
+		//		color: 'blue',
+		//		weight: 10,
+		//		opacity:0.2,
+		//		onEachFeature: function(feature, layer){
+		//			layer.on("contextmenu",function(e){
+		//				if (window.confirm("削除しますか?")) {
+		//					map.removeLayer(layer)
+		//					tmpdate = layer.toGeoJSON().properties.start
+		//					findIndex = plinesmoto.features.findIndex((item) => item.properties.start === tmpdate && item.properties.shurui === "path");
+		//					plinesmoto.features.splice(findIndex, 1);
+		//				}
+		//			})
+		//		}
+		//	}));
 			plinesmoto.features=plinesmoto.features.concat(pathobj.features);
 		}
 	}
