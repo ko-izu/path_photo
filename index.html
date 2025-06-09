@@ -102,9 +102,9 @@ if ("serviceWorker" in navigator) {
 <body style="overflow-x: hidden;">
 <div class="btn-group col-12" role="group" aria-label="Basic radio toggle button group">
 	<input type="radio" class="btn-check" name="btnradio" id="start" autocomplete="off">
-	<label class="btn btn-outline-primary col-4" for="start">TRACK(gps)</label>
+	<label class="btn btn-outline-primary col-4" for="start">TRACK(歩)</label>
 	<input type="radio" class="btn-check" name="btnradio" id="starteco" autocomplete="off">
-	<label class="btn btn-outline-primary col-4" for="starteco">TRACK(eco)</label>
+	<label class="btn btn-outline-primary col-4" for="starteco">TRACK(車)</label>
 	<input type="radio" class="btn-check" name="btnradio" id="stop" autocomplete="off" checked>
 	<label class="btn btn-outline-danger col-4" for="stop">STOP</label>
 </div>
@@ -185,18 +185,24 @@ function init() {
 	}).addTo(map);
 	map.attributionControl.setPosition('bottomright').setPrefix(false);
 
-	iconurl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABMlJREFUeF7tWdtNG0EUteEPkAIVxFQAVID54yUFKghUAFQQUwGmgtgVxEi8/lgqwFQAqSDmA74A55zVXOt6Ge/uOB6TlWellcF79z7Ofc51uTThV3nC7S8FAEIETDgCIQUmPABCEQwpEFJgwhEIKTDhARC6QEiBkAITjoBTCmxsbKz6xKtcLj9dXl62fcpI8s4EYHt7u/r+/n4A5XbGoVi3232EnMbLy8tpFEUd3zIHAlCtVudnZmZOYPiebyVs/AkE7qOrq6uWT/kDAdjc3LyD8csW4fdQTDyzDJovoNHfpeoL+nkQLIHHEz51uAuvvvdBt4+0aPgCwQoAjP+Z8Pw90qCW9AboItCt4l47Pz+P8ijJlIJRN7hvYVhVv7O+vl6ZmpraA78f+nvQrviqDR8AEAWVAs2LiwtrGowaAJEJvow8gsvo4tV5fn5e9FETPgAA4Q8QXDGC72G8LQ3ix74AIO+kIxAFbUTBSp4oc6HpAwAG1XT4ZeWfTwBoxNbW1iE+TsQg6NMACPsuBmbR9gBg1Z+dnX3ACyxSJRYpCIv/HnT5BsCA0MDndwXCSItiDwCL908BAD3wqQAYx0RQYskHCBoAnfult7e3xevr68fPBoDyTXdoq6LIr+uI0ua/docYAFZdML/TxqL4ZU6J40gB0cnSnbS6jJC2GZ7aaNe3aY7TzwSAvuJnCCIwJOO0iz27wuIEotRoUUwqnDFk5M2rKOjopNzjOLsGQTE3Zw7rGUMAiAcaB2X+d1KZTPV0GWGW2E3OEjEAaDd/8JFa8V0tNqNuXb1HZb658hmGHoYuiKGmftQpm1GBQ9aaBkEA6A4jKO0dCOvrIqaaE2jvl200R71qGRD69PIGgHcrUwSwJpm61KPiwQ53HJG6wzkBkDjBWU9v4zIcuvyWwjtE/eqdb3IBQGG4D5OnQbMsYQcZZwFtwoM1PaOY9GJnoS5ygEr1hURBHgCaKCqHc3Nzy3ozxILCkMK80ER+scgc+PY+zyYoYi0saigrbsH47OD7FnQ7pvzp6WkuUHpTY4pOR9C9ngVAfBpMjsmaqRxQpMh4BOEIjmjA+JsBi5oOQNinY7BTSE6NH9SSfUQMAEPZpvjr6+sjhYHhr4yKfwzhDaDPw9TIL6YgBpmKTJ4pAjoI7RXoO887TRHo2+FwVDZHTmt/hvfX8JwTVBxSUgtgKMOOFVVCrQPahRwKDgUOZDG82cb0uN7E/6z2yzr3pf0aXbLa+xkBGEjE84B+DtR2pRAm+zp7L55Xk+usoSxOvGTh3beo0TVIQjvNLs3eCQAw79vNaSFUkowJwiiM1jyYXnpXKEYKjV6cOAOQVrwYAXjOOvDVpEBvI5Os/Hr8HDUA5IcfZXZ0LZJoNOt7XRjjHp8nAgDWWZ4jr+2kyLW4LjIDF6ejBEM7w/BN6lGyjcFpOmQCYNvIaIacDtGbKz42tknFM3YCJHd2RCYA5GpAYNXv7eZMStzC+J1xGC9gmJU5O0KclkYP/shSR1uruUZcLgCEKYHgRMj/OSNkrcxclXGhJxDS6/P+KGPj7wSAi4JFoQ0AFMVTvvQMEeAL2aLwDRFQFE/50jNEgC9ki8I3REBRPOVLzxABvpAtCt8QAUXxlC89QwT4QrYofP8Ck3EhDeomx8cAAAAASUVORK5CYII="
+	iconurl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAEkUlEQVR4AcSYO29UORTHyaPYarfdahea3ZVWqxUdHZMuzzKiJCM+AFDSkKGjAokPAKGjoYny6iZUkRCRqJCoMgUCpYlEEVGgJPz+d+yJx9f3jn0fIrLH5/rY55z/edj3ZvpKi3/Ly8t/LC0tPaV/oX/l+RW906TK1gAsLCzcuLi4+Iix9+i/03/l+Ra9v7i4eJ/nRlprAKampjaw8Bd6rsF7srq6+luOUWGiFQArKyvXMPLvMntOT09Xy/ixvFYAnJ+f/zfJAAD+P2lNDL8VADMzM+8mKacW3k5aE8NvBcDm5uZnPPy6zIDj4+NXZfxYXisApPzs7Owh4yd6qN05PDz8HmKkzrUGYHd398PJyclfpMoDjHpPRD7Sn1Ef/25vbz9nrpHWGgBZd3Bw8G1nZ+cxBl/f2tr6h35XwMRrqjcOgEtqjVv3hTr0um7e+fn5q00Z7MtpDICMxegj0uQFStbUoXukUJ9T6QheX2CYb7TVBoBh8vaFjMWyMk93BIb1/SYjUgmADMCQzHCMlrcZoltnenr6dvTqCQuTAch4pQRyUw1ny7ApWkq54VO93yQAjvH1tLJbICQPslZLAjAh9Hr7TDKGSK4nbQgsTgIgr3kyNijMLrfuNfojjxfzuFY3CtEA/JzF8B4XVJeLamNvb28wITqFYKruswKjAeD9saLlleClFZIwDlirzjBsyO3VuR+iAJgwu2f8vrw+NGH4K0OGVOnvPqk2x4oxEESzz7Fc6aKLAjAsNtSahhFdQ2aDAZjRZT8YOhBwRtXLGAj2VbroogAg3E2fzAjmRm12dtaNzmjeJ8j3N5pT3RAxOcEHIXYHhx35NSdGqMcCGCkyisdkUQ83xyYKHngb3bcs0RwC+nZWSo3mLR89PUuXjVEASJk5wt5D6JwU+wKZj/lfz8gJ7n7JA8gcMiwQuy4Hyt1n6SgAylvC/kjK7EZvrAzAypFsA6QrMKItr2yMAlAmIKGAozwqIOplOl1ebQAUZtSbJeuyAnaVN0HXBkC4o06g2EJPBVUbAArdI5bHcANoL/ZoDEsIz9YCEJv/VrVApO6xe4vGWgDI65jTZ0w3l9TP/6R0LPrToWPJq4BYbyoStSJAShRGAJ4uJnsp+eDWiF7U6eVv9J9rAUBYEIBubZ3lgCh637kCr9dEFCoD4EQpPH04MrNvBYEAjD41g5FoIgqVAeDBYApgcE+vHkQna3oFYU4gsmf3Bxm1o1AJgAl9MH2s911DDYjg26UK2l2bSlcCUBR6PD3mfdeYEhC1PuwrAVDoXeMsLSMtHRpNdHL1gEOC0QzJ8OeSAVC8wf/lyPu+cP9ZtcG6XD3gkGA9+ftDz8kAUBby1mCS963ygih0TF3ZZdFjEgCjJAcAr+oj/VJpCaUowM59G1RNoyQAKAmFWt7PpQVGFjaimN0T7gLmQrLdJUE6CQBKckehvpeDkksmdcHB9kFXSqNoACZ90HvZSJ3CY/NyVZjCGbkoxP57xpUYDcDkrnsEKnWic99VKtpEwZWn6eQeDUCS8ZpezlSAG4bWdOVu0k8gBkSza0AlyfsBAAD//7PqH8UAAAAGSURBVAMALBW3jufvjCsAAAAASUVORK5CYII="
 	Iconstart = L.icon({
 		iconUrl: iconurl,
 		iconAnchor: [24, 36],
 		iconSize: [48, 48],
 		className:'blinking',
 	});
-
 	Iconstop = L.icon({
 		iconUrl: iconurl,
 		iconAnchor: [24, 36],
 		iconSize: [48, 48],
+	});	
+	iconurlcar = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABMlJREFUeF7tWdtNG0EUteEPkAIVxFQAVID54yUFKghUAFQQUwGmgtgVxEi8/lgqwFQAqSDmA74A55zVXOt6Ge/uOB6TlWellcF79z7Ofc51uTThV3nC7S8FAEIETDgCIQUmPABCEQwpEFJgwhEIKTDhARC6QEiBkAITjoBTCmxsbKz6xKtcLj9dXl62fcpI8s4EYHt7u/r+/n4A5XbGoVi3232EnMbLy8tpFEUd3zIHAlCtVudnZmZOYPiebyVs/AkE7qOrq6uWT/kDAdjc3LyD8csW4fdQTDyzDJovoNHfpeoL+nkQLIHHEz51uAuvvvdBt4+0aPgCwQoAjP+Z8Pw90qCW9AboItCt4l47Pz+P8ijJlIJRN7hvYVhVv7O+vl6ZmpraA78f+nvQrviqDR8AEAWVAs2LiwtrGowaAJEJvow8gsvo4tV5fn5e9FETPgAA4Q8QXDGC72G8LQ3ix74AIO+kIxAFbUTBSp4oc6HpAwAG1XT4ZeWfTwBoxNbW1iE+TsQg6NMACPsuBmbR9gBg1Z+dnX3ACyxSJRYpCIv/HnT5BsCA0MDndwXCSItiDwCL908BAD3wqQAYx0RQYskHCBoAnfult7e3xevr68fPBoDyTXdoq6LIr+uI0ua/docYAFZdML/TxqL4ZU6J40gB0cnSnbS6jJC2GZ7aaNe3aY7TzwSAvuJnCCIwJOO0iz27wuIEotRoUUwqnDFk5M2rKOjopNzjOLsGQTE3Zw7rGUMAiAcaB2X+d1KZTPV0GWGW2E3OEjEAaDd/8JFa8V0tNqNuXb1HZb658hmGHoYuiKGmftQpm1GBQ9aaBkEA6A4jKO0dCOvrIqaaE2jvl200R71qGRD69PIGgHcrUwSwJpm61KPiwQ53HJG6wzkBkDjBWU9v4zIcuvyWwjtE/eqdb3IBQGG4D5OnQbMsYQcZZwFtwoM1PaOY9GJnoS5ygEr1hURBHgCaKCqHc3Nzy3ozxILCkMK80ER+scgc+PY+zyYoYi0saigrbsH47OD7FnQ7pvzp6WkuUHpTY4pOR9C9ngVAfBpMjsmaqRxQpMh4BOEIjmjA+JsBi5oOQNinY7BTSE6NH9SSfUQMAEPZpvjr6+sjhYHhr4yKfwzhDaDPw9TIL6YgBpmKTJ4pAjoI7RXoO887TRHo2+FwVDZHTmt/hvfX8JwTVBxSUgtgKMOOFVVCrQPahRwKDgUOZDG82cb0uN7E/6z2yzr3pf0aXbLa+xkBGEjE84B+DtR2pRAm+zp7L55Xk+usoSxOvGTh3beo0TVIQjvNLs3eCQAw79vNaSFUkowJwiiM1jyYXnpXKEYKjV6cOAOQVrwYAXjOOvDVpEBvI5Os/Hr8HDUA5IcfZXZ0LZJoNOt7XRjjHp8nAgDWWZ4jr+2kyLW4LjIDF6ejBEM7w/BN6lGyjcFpOmQCYNvIaIacDtGbKz42tknFM3YCJHd2RCYA5GpAYNXv7eZMStzC+J1xGC9gmJU5O0KclkYP/shSR1uruUZcLgCEKYHgRMj/OSNkrcxclXGhJxDS6/P+KGPj7wSAi4JFoQ0AFMVTvvQMEeAL2aLwDRFQFE/50jNEgC9ki8I3REBRPOVLzxABvpAtCt8QAUXxlC89QwT4QrYofP8Ck3EhDeomx8cAAAAASUVORK5CYII="
+	Iconstartcar = L.icon({
+		iconUrl: iconurlcar,
+		iconAnchor: [24, 36],
+		iconSize: [48, 48],
+		className:'blinking',
 	});
 
 	plines = L.featureGroup().addTo(map);
@@ -309,7 +315,7 @@ function startgeposieco() {
 	window.removeEventListener("deviceorientationabsolute",orientation,true);
 	camhoko.setOpacity(0)
 	pstat=new Date().toLocaleString("ja-JP")
-	track.setIcon(Iconstart)
+	track.setIcon(Iconstartcar)
 	pline.addLatLng(track.getLatLng());
 	clearInterval(IntervalId);
 	IntervalId = null;
