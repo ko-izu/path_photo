@@ -374,10 +374,10 @@ function getposition(){
 			posaccu.innerText = "エラー"+error.code
 			geooption = {
 				"enableHighAccuracy": true,
-				"timeout": 10000,
+				"timeout": 5000,
 				"maximumAge": 0,
 			}
-			ref(pos,10)
+			ref(pos,30)
 		},geooption
 	);
 }
