@@ -321,12 +321,12 @@ function startgeposieco() {
 	IntervalId = null;
 	navigator.geolocation.clearWatch(watchID);
 	geooption = {
-		"enableHighAccuracy": false,
+		"enableHighAccuracy": true,
 		"timeout": 5000,
 		"maximumAge": 0,
 	}
 	getposition()
-	IntervalId = setInterval(getposition, 30000);
+	IntervalId = setInterval(getposition, 15000);
 }
 
 function stopgeposi()  {
@@ -364,7 +364,7 @@ function getposition(){
 				ref(pos,30);
 			}
 			geooption = {
-				"enableHighAccuracy": false,
+				"enableHighAccuracy": true,
 				"timeout": 5000,
 				"maximumAge": 0,
 			}
@@ -372,12 +372,6 @@ function getposition(){
 		function (error) {
 			postime.innerText = new Date().toLocaleString("ja-JP")
 			posaccu.innerText = "エラー"+error.code
-			geooption = {
-				"enableHighAccuracy": true,
-				"timeout": 5000,
-				"maximumAge": 0,
-			}
-			ref(pos,30)
 		},geooption
 	);
 }
@@ -394,6 +388,8 @@ function ref(pos,LIMIT){
 	kyori = L.latLng(oldlatlon).distanceTo(tmplatlon)
 	if(tmpspee){
 		posspee.innerText = Math.round(tmpspee*36/10)+"km/h"
+	}else if(tmptimestamp == maenotime){
+                posspee.innerText = "0km/h"
 	}else{
 		posspee.innerText = Math.round(kyori / (tmptimestamp - maenotime) * 3600)+"km/h"
 	}
