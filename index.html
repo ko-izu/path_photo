@@ -141,7 +141,9 @@ if ("serviceWorker" in navigator) {
 </table>
 <div class="btn-group col-12" role="group" aria-label="Basic checkbox toggle button group">
 	<input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-	<label class="btn btn-outline-danger col-12  btn-sm" for="btncheck1">close</label>
+	<label class="btn btn-outline-danger col-6  btn-sm" for="btncheck1">sleep</label>
+	<input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+	<label class="btn btn-outline-danger col-6  btn-sm" for="btncheck2">close</label>
 </div>
 <script type="text/javascript">
 var map;
@@ -169,6 +171,9 @@ var made = document.getElementById("made");
 kara.addEventListener('change', kikan);
 made.addEventListener('change', kikan);
 document.getElementById('btncheck1').addEventListener('click',() =>  {
+	window.close();
+});
+document.getElementById('btncheck2').addEventListener('click',() =>  {
 	window.close();
 	localStorage.removeItem('ichijidatap');
 	localStorage.removeItem('ichijidata1');
@@ -385,7 +390,11 @@ function ref(pos,LIMIT){
 	tmpaccu=pos.coords.accuracy
 	tmphead=pos.coords.heading
 	oldlatlon=[track.getLatLng().lat,track.getLatLng().lng]
-	kyori = L.latLng(oldlatlon).distanceTo(tmplatlon)
+	if(oldlatlon==[[35,135]){
+			kyori=0
+		}else{
+			kyori = L.latLng(oldlatlon).distanceTo(tmplatlon)
+	}
 	if(tmpspee){
 		posspee.innerText = Math.round(tmpspee*36/10)+"km/h"
 	}else{
@@ -398,7 +407,7 @@ function ref(pos,LIMIT){
 	}
 	if (kyori > LIMIT && kyori > tmpaccu){
 		kyoriruikei = kyoriruikei + kyori;
-		idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
+		idokyori.innerText = Math.round(kyoriruikei/1000)+"km("+Math.round(kyori)+"⁠m)"
 		map.setView(tmplatlon)
 		track.setLatLng(tmplatlon)
 		pline.addLatLng(tmplatlon);
