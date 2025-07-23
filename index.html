@@ -390,7 +390,7 @@ function ref(pos,LIMIT){
 	tmpaccu=pos.coords.accuracy
 	tmphead=pos.coords.heading
 	oldlatlon=[track.getLatLng().lat,track.getLatLng().lng]
-	if(oldlatlon==[[35,135]){
+	if(oldlatlon==[35,135]){
 			kyori=0
 		}else{
 			kyori = L.latLng(oldlatlon).distanceTo(tmplatlon)
