@@ -178,6 +178,7 @@ document.getElementById('btncheck2').addEventListener('click',() =>  {
 	localStorage.removeItem('ichijidatap');
 	localStorage.removeItem('ichijidata1');
 	localStorage.removeItem('ichijidata2');
+	localStorage.removeItem('ichijidata3');
 });
 window.addEventListener("DOMContentLoaded", init);
 
@@ -262,6 +263,10 @@ function init() {
 	if (lscontent2) {
 		tmplatlngs =  JSON.parse(lscontent2);
 		pline.setLatLngs(tmplatlngs);
+	}
+	var lscontent3 = localStorage.getItem('ichijidata3');
+	if (lscontent3) {
+		kyoriruikei =  Number(lscontent3); 
 	}
 }
 
@@ -355,6 +360,7 @@ function stopgeposi()  {
 	pline = new L.polyline([], { color: 'blue', weight: 5}).addTo(map)
 	savelscontent1();
 	localStorage.removeItem('ichijidata2');
+	localStorage.removeItem('ichijidata3');
 }
 
 
@@ -773,8 +779,10 @@ function savelscontent2() {
 	var tmp = pline.getLatLngs()
 	tmp = JSON.stringify(tmp)
 	localStorage.setItem('ichijidata2', tmp);
+	localStorage.setItem('ichijidata3', kyoriruikei);
 }
 </script>
 </body>
 </html>
+
 
