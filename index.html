@@ -413,7 +413,11 @@ function ref(pos,LIMIT){
 	}
 	if (kyori > LIMIT && kyori > tmpaccu){
 		kyoriruikei = kyoriruikei + kyori;
-		idokyori.innerText = Math.round(kyoriruikei/1000)+"km("+Math.round(kyori)+"⁠m)"
+		if(kyoriruikei>10000){
+			idokyori.innerText = Math.round(kyoriruikei/1000)+"km("+Math.round(kyori)+"⁠m)"
+		}else{
+			idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
+		}
 		map.setView(tmplatlon)
 		track.setLatLng(tmplatlon)
 		pline.addLatLng(tmplatlon);
@@ -432,7 +436,11 @@ function ref(pos,LIMIT){
 		maenotime = tmptimestam
 		latlon = tmplatlon
 	}else{
-		idokyori.innerText = Math.round(kyoriruikei/1000)+"km("+Math.round(kyori)+"⁠m)"
+		if(kyoriruikei>10000){
+			idokyori.innerText = Math.round(kyoriruikei/1000)+"km("+Math.round(kyori)+"⁠m)"
+		}else{
+			idokyori.innerText = Math.round(kyoriruikei)+"m("+Math.round(kyori)+"⁠m)"
+		}
 	}
 }
 	
@@ -784,5 +792,6 @@ function savelscontent2() {
 </script>
 </body>
 </html>
+
 
 
